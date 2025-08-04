@@ -1,0 +1,22 @@
+/target
+**/*.rs.bk
+Cargo.lock
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Environment files (keep example)
+.env
+.env.production
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
