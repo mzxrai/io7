@@ -17,7 +17,7 @@ describe('CommandBox', () => {
     it('should show empty state when no agents selected', async () => {
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      expect(el.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).toContain('Select agents to build your pack');
     });
 
     it('should show single agent command', async () => {
@@ -26,7 +26,7 @@ describe('CommandBox', () => {
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
       expect(el.textContent).toContain('npx io7@latest --install optimize');
-      expect(el.textContent).toContain('Install command');
+      expect(el.textContent).toContain('Copy Install Command');
     });
 
     it('should show multi-agent pack command', async () => {
@@ -36,7 +36,7 @@ describe('CommandBox', () => {
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
       expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit');
-      expect(el.textContent).toContain('Create pack with 2 agents');
+      expect(el.textContent).toContain('Copy Install Command');
     });
 
     it('should provide copy functionality when agents selected', async () => {
@@ -55,7 +55,7 @@ describe('CommandBox', () => {
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
       // Initially shows empty state
-      expect(el.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).toContain('Select agents to build your pack');
       expect(el.textContent).not.toContain('npx io7@latest');
       
       selectionStore.select('optimize');
@@ -63,14 +63,14 @@ describe('CommandBox', () => {
       
       // Shows single agent command
       expect(el.textContent).toContain('npx io7@latest --install optimize');
-      expect(el.textContent).toContain('Install command');
+      expect(el.textContent).toContain('Copy Install Command');
       
       selectionStore.select('security');
       await new Promise(resolve => setTimeout(resolve, 10));
       
       // Shows multi-agent command
       expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit');
-      expect(el.textContent).toContain('Create pack with 2 agents');
+      expect(el.textContent).toContain('Copy Install Command');
     });
 
     it('should return to empty state when all deselected', async () => {
@@ -85,7 +85,7 @@ describe('CommandBox', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
       
       // Back to empty state
-      expect(el.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).toContain('Select agents to build your pack');
       expect(el.textContent).not.toContain('npx io7@latest');
     });
   });
@@ -108,14 +108,15 @@ describe('CommandBox', () => {
       expect(el.textContent).toContain('npx io7@latest --install optimize');
     });
 
-    it('should show agent count in label for multi-selection', async () => {
+    it('should show command for multi-agent selection', async () => {
       selectionStore.select('optimize');
       selectionStore.select('security');
       selectionStore.select('performance');
       
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      expect(el.textContent).toContain('Create pack with 3 agents');
+      expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit,perf-optimizer');
+      expect(el.textContent).toContain('Copy Install Command');
     });
   });
 });

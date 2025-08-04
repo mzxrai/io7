@@ -72,7 +72,7 @@ export class CommandBox extends HTMLElement {
     }
   }
   
-  private handleCopyClick = async (event: Event): void => {
+  private handleCopyClick = async (event: Event): Promise<void> => {
     const button = event.target as HTMLButtonElement;
     const command = button.getAttribute('data-command');
     

@@ -56,8 +56,3 @@ export function queryShadowAll<T extends HTMLElement>(
   // For backward compatibility, just use regular querySelectorAll
   return element.querySelectorAll<T>(selector);
 }
-
-// Deprecated - no longer needed
-export function getShadowRoot(element: HTMLElement): ShadowRoot | null {
-  return null;
-}
