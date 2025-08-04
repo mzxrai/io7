@@ -1,9 +1,9 @@
 import { selectionStore } from '../../store/selection';
 import '../shared/Badge';
 import './AgentStats';
+import styles from './AgentCard.module.css';
 
 export class AgentCard extends HTMLElement {
-  private shadow: ShadowRoot;
   private storeListener: ((event: Event) => void) | null = null;
 
   static get observedAttributes(): string[] {
@@ -11,12 +11,6 @@ export class AgentCard extends HTMLElement {
       'agent-id', 'name', 'icon', 'category', 'description', 'package',
       'is-popular', 'downloads', 'upvotes', 'votes', 'last-updated'
     ];
-  }
-
-  constructor() {
-    super();
-    this.shadow = this.attachShadow({ mode: 'open' });
-    this.render();
   }
 
   connectedCallback(): void {
@@ -40,12 +34,11 @@ export class AgentCard extends HTMLElement {
     this.cleanupEventListeners();
 
     // Checkbox change handler
-    const checkbox = this.shadow.querySelector('input[type="checkbox"]');
+    const checkbox = this.querySelector(`.${styles.checkbox}`) as HTMLInputElement;
     checkbox?.addEventListener('change', this.handleCheckboxChange);
 
-    // Card click handler (for clicking anywhere on the card)
-    const card = this.shadow.querySelector('.agent-card');
-    card?.addEventListener('click', this.handleCardClick);
+    // Card click handler - attach to host element for full coverage
+    this.addEventListener('click', this.handleCardClick);
 
     // Listen to store changes
     this.storeListener = () => this.syncWithStore();
@@ -53,11 +46,11 @@ export class AgentCard extends HTMLElement {
   }
 
   private cleanupEventListeners(): void {
-    const checkbox = this.shadow.querySelector('input[type="checkbox"]');
+    const checkbox = this.querySelector(`.${styles.checkbox}`) as HTMLInputElement;
     checkbox?.removeEventListener('change', this.handleCheckboxChange);
 
-    const card = this.shadow.querySelector('.agent-card');
-    card?.removeEventListener('click', this.handleCardClick);
+    // Remove click handler from host element
+    this.removeEventListener('click', this.handleCardClick);
 
     if (this.storeListener) {
       selectionStore.removeEventListener('change', this.storeListener);
@@ -87,8 +80,8 @@ export class AgentCard extends HTMLElement {
     
     // Don't toggle if clicking on checkbox, stats, or their children
     if (
-      target.closest('input[type="checkbox"]') ||
-      target.closest('.checkbox-wrapper') ||
+      target.closest(`.${styles.checkbox}`) ||
+      target.closest(`.${styles.checkboxWrapper}`) ||
       target.closest('agent-stats') ||
       target.tagName === 'AGENT-STATS'
     ) {
@@ -107,7 +100,7 @@ export class AgentCard extends HTMLElement {
     const agentId = this.getAttribute('agent-id');
     if (!agentId) return;
 
-    const checkbox = this.shadow.querySelector('input[type="checkbox"]') as HTMLInputElement;
+    const checkbox = this.querySelector(`.${styles.checkbox}`) as HTMLInputElement;
     if (checkbox) {
       checkbox.checked = selectionStore.isSelected(agentId);
     }
@@ -119,13 +112,12 @@ export class AgentCard extends HTMLElement {
     const agentId = this.getAttribute('agent-id');
     if (!agentId) return;
 
-    const card = this.shadow.querySelector('.agent-card');
     const isSelected = selectionStore.isSelected(agentId);
     
     if (isSelected) {
-      card?.classList.add('selected');
+      this.classList.add('selected');
     } else {
-      card?.classList.remove('selected');
+      this.classList.remove('selected');
     }
   }
 
@@ -159,103 +151,28 @@ export class AgentCard extends HTMLElement {
       ? '<agent-badge text="Popular" variant="popular"></agent-badge>'
       : '';
 
-    this.shadow.innerHTML = `
-      <style>
-        :host {
-          display: block;
-        }
+    // Apply host styles
+    this.className = `${styles.host} ${this.classList.contains('selected') ? 'selected' : ''}`;
 
-        .agent-card {
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px solid rgba(255, 255, 255, 0.06);
-          border-radius: 12px;
-          padding: 20px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          position: relative;
-        }
-
-        .agent-card:hover {
-          background: rgba(255, 255, 255, 0.04);
-          border-color: rgba(255, 255, 255, 0.1);
-          transform: translateY(-2px);
-        }
-
-        .agent-card.selected {
-          background: rgba(255, 255, 255, 0.06);
-          border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .checkbox-wrapper {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-        }
-
-        input[type="checkbox"] {
-          width: 18px;
-          height: 18px;
-          cursor: pointer;
-          accent-color: #fff;
-        }
-
-        .agent-header {
-          display: flex;
-          align-items: flex-start;
-          gap: 12px;
-          margin-bottom: 12px;
-        }
-
-        .agent-icon {
-          font-size: 32px;
-          line-height: 1;
-        }
-
-        .agent-info {
-          flex: 1;
-        }
-
-        .agent-name {
-          font-size: 18px;
-          font-weight: 600;
-          color: #fff;
-          margin-bottom: 4px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .agent-category {
-          font-size: 12px;
-          color: #666;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .agent-description {
-          color: #999;
-          font-size: 14px;
-          line-height: 1.5;
-          margin-right: 40px;
-        }
-      </style>
-      <div class="agent-card">
-        <div class="checkbox-wrapper">
+    this.innerHTML = `
+      <div class="${styles.card}">
+        <div class="${styles.checkboxWrapper}">
           <input type="checkbox" 
+                 class="${styles.checkbox}"
                  id="checkbox-${agentId}" 
                  data-package="${packageName}">
         </div>
-        <div class="agent-header">
-          <div class="agent-icon">${icon}</div>
-          <div class="agent-info">
-            <div class="agent-name">
+        <div class="${styles.header}">
+          <div class="${styles.icon}">${icon}</div>
+          <div class="${styles.info}">
+            <div class="${styles.name}">
               ${name}
               ${popularBadge}
             </div>
-            <div class="agent-category">${category}</div>
+            <div class="${styles.category}">${category}</div>
           </div>
         </div>
-        <div class="agent-description">${description}</div>
+        <div class="${styles.description}">${description}</div>
         <agent-stats
           downloads="${downloads}"
           upvotes="${upvotes}"

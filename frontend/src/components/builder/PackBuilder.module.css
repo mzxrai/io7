@@ -1,0 +1,84 @@
+/* PackBuilder component styles - exact copy from shadow DOM */
+.host {
+  display: block;
+}
+
+.container {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02)
+  );
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  box-shadow: 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 20px 40px -10px rgba(0, 0, 0, 0.3);
+  padding: 1.75rem;
+}
+
+.header {
+  margin-bottom: 1.25rem;
+}
+
+.heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.content {
+  /* No additional padding needed */
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.toggle {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+}
+
+.toggleLabel {
+  font-size: 0.8125rem;
+  color: #aaa;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle:checked + .toggleLabel {
+  color: #fff;
+}
+
+.hint {
+  font-size: 0.6875rem;
+  color: #666;
+  margin-left: auto;
+}

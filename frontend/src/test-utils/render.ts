@@ -1,5 +1,5 @@
 /**
- * Helper utilities for testing Web Components
+ * Helper utilities for testing Web Components (without Shadow DOM)
  */
 
 export function createTestElement(html: string): HTMLElement {
@@ -40,20 +40,24 @@ export function dispatchCustomEvent(
   element.dispatchEvent(event);
 }
 
-export function getShadowRoot(element: HTMLElement): ShadowRoot | null {
-  return element.shadowRoot;
-}
-
+// Updated for no Shadow DOM - now just uses regular querySelector
 export function queryShadow<T extends HTMLElement>(
   element: HTMLElement,
   selector: string
 ): T | null {
-  return element.shadowRoot?.querySelector<T>(selector) ?? null;
+  // For backward compatibility, just use regular querySelector
+  return element.querySelector<T>(selector);
 }
 
 export function queryShadowAll<T extends HTMLElement>(
   element: HTMLElement,
   selector: string
 ): NodeListOf<T> {
-  return element.shadowRoot?.querySelectorAll<T>(selector) ?? ([] as unknown as NodeListOf<T>);
+  // For backward compatibility, just use regular querySelectorAll
+  return element.querySelectorAll<T>(selector);
+}
+
+// Deprecated - no longer needed
+export function getShadowRoot(element: HTMLElement): ShadowRoot | null {
+  return null;
 }

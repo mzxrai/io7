@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test CSS Modules</title>
+</head>
+<body>
+  <div id="test"></div>
+  <script type="module">
+    // Test if we can see the Badge component and its styles
+    const checkStyles = () => {
+      const badge = document.querySelector('agent-badge');
+      if (badge) {
+        console.log('Badge element found:', badge);
+        console.log('Badge className:', badge.className);
+        console.log('Badge innerHTML:', badge.innerHTML);
+        
+        // Check if styles are in the document
+        const styles = document.querySelectorAll('style');
+        console.log('Number of style tags:', styles.length);
+        styles.forEach((style, i) => {
+          if (style.textContent.includes('_host_') || style.textContent.includes('_badge_')) {
+            console.log(`Style ${i} contains badge styles:`, style.textContent.substring(0, 200));
+          }
+        });
+      } else {
+        console.log('No badge element found yet');
+      }
+    };
+    
+    // Check immediately and after a delay
+    setTimeout(checkStyles, 1000);
+    setTimeout(checkStyles, 2000);
+  </script>
+</body>
+</html>

@@ -1,14 +1,8 @@
-export class AgentStats extends HTMLElement {
-  private shadow: ShadowRoot;
+import styles from './AgentStats.module.css';
 
+export class AgentStats extends HTMLElement {
   static get observedAttributes(): string[] {
     return ['downloads', 'upvotes', 'votes', 'last-updated', 'agent-id'];
-  }
-
-  constructor() {
-    super();
-    this.shadow = this.attachShadow({ mode: 'open' });
-    this.render();
   }
 
   connectedCallback(): void {
@@ -39,67 +33,29 @@ export class AgentStats extends HTMLElement {
 
     // Only show downloads if > 100
     if (downloads > 100 && !isNaN(downloads)) {
-      stats.push(`<div class="stat">⬇️ ${this.formatNumber(downloads)}</div>`);
+      stats.push(`<div class="${styles.stat}">⬇️ ${this.formatNumber(downloads)}</div>`);
     }
 
     // Only show upvotes if votes > 100
     if (votes > 100 && !isNaN(votes) && !isNaN(upvotes)) {
-      stats.push(`<div class="stat">👍 ${upvotes}% (${votes})</div>`);
+      stats.push(`<div class="${styles.stat}">👍 ${upvotes}% (${votes})</div>`);
     }
 
     // Show last updated if provided
     if (lastUpdated) {
-      stats.push(`<div class="stat">Updated ${lastUpdated}</div>`);
+      stats.push(`<div class="${styles.stat}">Updated ${lastUpdated}</div>`);
     }
 
     // Show view source button if agent-id provided
     const viewSourceButton = agentId 
-      ? `<button class="view-source-btn">View Source</button>`
+      ? `<button class="${styles.viewSourceBtn}">View Source</button>`
       : '';
 
-    this.shadow.innerHTML = `
-      <style>
-        :host {
-          display: block;
-        }
+    // Apply host styles
+    this.className = styles.host;
 
-        .agent-stats {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          margin-top: 12px;
-          padding-top: 12px;
-          border-top: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .stat {
-          font-size: 12px;
-          color: #666;
-          display: flex;
-          align-items: center;
-          gap: 4px;
-        }
-
-        .view-source-btn {
-          margin-left: auto;
-          background: transparent;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #666;
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-size: 11px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-        }
-
-        .view-source-btn:hover {
-          background: rgba(255, 255, 255, 0.05);
-          color: #999;
-          border-color: rgba(255, 255, 255, 0.2);
-        }
-      </style>
-      <div class="agent-stats">
+    this.innerHTML = `
+      <div class="${styles.stats}">
         ${stats.join('')}
         ${viewSourceButton}
       </div>
@@ -107,7 +63,7 @@ export class AgentStats extends HTMLElement {
 
     // Add event listener for view source button
     if (agentId) {
-      const button = this.shadow.querySelector('.view-source-btn');
+      const button = this.querySelector(`.${styles.viewSourceBtn}`);
       button?.addEventListener('click', () => {
         this.dispatchEvent(new CustomEvent('view-source', {
           detail: { agentId },

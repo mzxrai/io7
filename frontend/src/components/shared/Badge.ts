@@ -1,16 +1,10 @@
+import styles from './Badge.module.css';
+
 export type BadgeVariant = 'default' | 'popular' | 'stat';
 
 export class Badge extends HTMLElement {
-  private shadow: ShadowRoot;
-  
   static get observedAttributes(): string[] {
     return ['text', 'icon', 'variant', 'aria-label'];
-  }
-
-  constructor() {
-    super();
-    this.shadow = this.attachShadow({ mode: 'open' });
-    this.render();
   }
 
   connectedCallback(): void {
@@ -27,58 +21,19 @@ export class Badge extends HTMLElement {
     const variant = (this.getAttribute('variant') as BadgeVariant) || 'default';
     const ariaLabel = this.getAttribute('aria-label');
 
-    this.shadow.innerHTML = `
-      <style>
-        :host {
-          display: inline-block;
-        }
+    // Apply host styles to the element itself
+    this.className = styles.host;
 
-        .badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-          padding: 3px 6px;
-          border-radius: 4px;
-          font-size: 10px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
-        }
+    // Get the variant style - map 'default' to 'defaultVariant'
+    const variantKey = variant === 'default' ? 'defaultVariant' : variant;
+    const variantClass = styles[variantKey] || styles.defaultVariant;
 
-        .badge--default {
-          background: rgba(255, 255, 255, 0.1);
-          color: #999;
-        }
-
-        .badge--popular {
-          background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-          color: #000;
-        }
-
-        .badge--stat {
-          background: transparent;
-          color: #666;
-          padding: 0;
-          font-size: 12px;
-          font-weight: 500;
-          text-transform: none;
-        }
-
-        .badge-icon {
-          font-size: 12px;
-          line-height: 1;
-        }
-
-        .badge-text {
-          line-height: 1;
-        }
-      </style>
-      <div class="badge badge--${variant}" 
+    this.innerHTML = `
+      <div class="${styles.badge} ${variantClass}" 
            ${variant === 'stat' ? 'role="status"' : ''}
            ${ariaLabel ? `aria-label="${ariaLabel}"` : ''}>
-        ${icon ? `<span class="badge-icon">${icon}</span>` : ''}
-        <span class="badge-text">${text}</span>
+        ${icon ? `<span class="${styles.icon}">${icon}</span>` : ''}
+        <span class="${styles.text}">${text}</span>
       </div>
     `;
   }

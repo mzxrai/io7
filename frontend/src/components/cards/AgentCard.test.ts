@@ -137,8 +137,8 @@ describe('AgentCard', () => {
         <agent-card agent-id="optimize"></agent-card>
       `);
 
-      const card = queryShadow(el, '.agent-card');
-      card?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      // Click on the host element itself
+      el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
       expect(selectionStore.isSelected('optimize')).toBe(true);
     });
@@ -228,13 +228,13 @@ describe('AgentCard', () => {
         <agent-card agent-id="optimize"></agent-card>
       `);
 
-      const card = queryShadow(el, '.agent-card');
-      expect(card?.classList.contains('selected')).toBe(false);
+      // Selected class is now on the host element
+      expect(el.classList.contains('selected')).toBe(false);
 
       const checkbox = queryShadow(el, 'input[type="checkbox"]') as HTMLInputElement;
       checkbox.click();
 
-      expect(card?.classList.contains('selected')).toBe(true);
+      expect(el.classList.contains('selected')).toBe(true);
     });
   });
 });

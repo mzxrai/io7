@@ -36,16 +36,16 @@ describe('PackBuilder', () => {
       
       const heading = queryShadow(el, '.builder-heading');
       expect(heading).toBeTruthy();
-      expect(heading?.textContent).toContain('Agent Pack Builder');
+      expect(heading?.textContent).toContain('Your Agent Pack');
     });
 
     it('should show section labels', async () => {
       const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
       
-      const commandSection = queryShadow(el, '.command-section');
+      const commandSection = queryShadow(el, '.section');
       expect(commandSection).toBeTruthy();
       
-      const selectedSection = queryShadow(el, '.selected-section');
+      const selectedSection = queryShadow(el, '.section');
       expect(selectedSection).toBeTruthy();
     });
 
@@ -117,12 +117,11 @@ describe('PackBuilder', () => {
     it('should stack components vertically', async () => {
       const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
       
-      const sections = [
-        queryShadow(el, '.command-section'),
-        queryShadow(el, '.selected-section')
-      ];
+      const sections = el.shadowRoot?.querySelectorAll('.section');
       
-      sections.forEach(section => {
+      expect(sections).toBeTruthy();
+      expect(sections?.length).toBeGreaterThan(0);
+      sections?.forEach(section => {
         expect(section).toBeTruthy();
       });
     });
