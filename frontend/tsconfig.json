@@ -33,6 +33,8 @@
       "@store/*": ["src/store/*"],
       "@types/*": ["src/types/*"],
       "@data/*": ["src/data/*"],
+      "@utils/*": ["src/utils/*"],
+      "@styles/*": ["src/styles/*"],
       "@test-utils/*": ["src/test-utils/*"]
     }
   },

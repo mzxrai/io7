@@ -15,7 +15,6 @@ describe('AgentStats', () => {
 
       // Downloads should be visible with formatted number
       expect(el.textContent).toContain('12.4k');
-      expect(el.textContent).toContain('⬇️');
     });
 
     it('should not display downloads when <= 100', async () => {
@@ -24,7 +23,6 @@ describe('AgentStats', () => {
       `);
 
       // Low download count should not be displayed
-      expect(el.textContent).not.toContain('⬇️');
       expect(el.textContent).not.toContain('85');
     });
 
@@ -35,7 +33,6 @@ describe('AgentStats', () => {
 
       // Upvote stats should be visible
       expect(el.textContent).toContain('92%');
-      expect(el.textContent).toContain('👍');
       expect(el.textContent).toContain('(234)');
     });
 
@@ -45,7 +42,6 @@ describe('AgentStats', () => {
       `);
 
       // Low vote count should not be displayed
-      expect(el.textContent).not.toContain('👍');
       expect(el.textContent).not.toContain('78%');
     });
 
@@ -100,9 +96,7 @@ describe('AgentStats', () => {
       `);
 
       // All stats should be visible
-      expect(el.textContent).toContain('⬇️');
       expect(el.textContent).toContain('12.4k');
-      expect(el.textContent).toContain('👍');
       expect(el.textContent).toContain('92%');
       expect(el.textContent).toContain('Updated');
       expect(el.textContent).toContain('View Source');

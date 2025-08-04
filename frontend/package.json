@@ -26,5 +26,8 @@
     "typescript": "~5.8.3",
     "vite": "^7.0.4",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "lucide": "^0.536.0"
   }
 }

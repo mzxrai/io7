@@ -20,6 +20,12 @@
   gap: var(--space-1);
 }
 
+.stat svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
 .viewSourceBtn {
   margin-left: auto;
   background: transparent;

@@ -1,3 +1,4 @@
+import { createIcon } from '@utils/icons';
 import styles from './AgentStats.module.css';
 
 export class AgentStats extends HTMLElement {
@@ -29,49 +30,58 @@ export class AgentStats extends HTMLElement {
     const lastUpdated = this.getAttribute('last-updated');
     const agentId = this.getAttribute('agent-id');
 
-    const stats: string[] = [];
-
-    // Only show downloads if > 100
-    if (downloads > 100 && !isNaN(downloads)) {
-      stats.push(`<div class="${styles.stat}">⬇️ ${this.formatNumber(downloads)}</div>`);
-    }
-
-    // Only show upvotes if votes > 100
-    if (votes > 100 && !isNaN(votes) && !isNaN(upvotes)) {
-      stats.push(`<div class="${styles.stat}">👍 ${upvotes}% (${votes})</div>`);
-    }
-
-    // Show last updated if provided
-    if (lastUpdated) {
-      stats.push(`<div class="${styles.stat}">Updated ${lastUpdated}</div>`);
-    }
-
-    // Show view source button if agent-id provided
-    const viewSourceButton = agentId
-      ? `<button class="${styles.viewSourceBtn}">View Source</button>`
-      : '';
-
     // Apply host styles
     this.className = styles.host;
 
-    this.innerHTML = `
-      <div class="${styles.stats}">
-        ${stats.join('')}
-        ${viewSourceButton}
-      </div>
-    `;
+    // Clear content
+    this.innerHTML = '';
 
-    // Add event listener for view source button
+    // Create container
+    const container = document.createElement('div');
+    container.className = styles.stats;
+
+    // Add download stat if > 100
+    if (downloads > 100 && !isNaN(downloads)) {
+      const stat = document.createElement('div');
+      stat.className = styles.stat;
+      stat.appendChild(createIcon('download', 14));
+      stat.appendChild(document.createTextNode(` ${this.formatNumber(downloads)}`));
+      container.appendChild(stat);
+    }
+
+    // Add upvote stat if votes > 100
+    if (votes > 100 && !isNaN(votes) && !isNaN(upvotes)) {
+      const stat = document.createElement('div');
+      stat.className = styles.stat;
+      stat.appendChild(createIcon('trending-up', 14));
+      stat.appendChild(document.createTextNode(` ${upvotes}% (${votes})`));
+      container.appendChild(stat);
+    }
+
+    // Add last updated if provided
+    if (lastUpdated) {
+      const stat = document.createElement('div');
+      stat.className = styles.stat;
+      stat.textContent = `Updated ${lastUpdated}`;
+      container.appendChild(stat);
+    }
+
+    // Add view source button if agent-id provided
     if (agentId) {
-      const button = this.querySelector(`.${styles.viewSourceBtn}`);
-      button?.addEventListener('click', () => {
+      const button = document.createElement('button');
+      button.className = styles.viewSourceBtn;
+      button.textContent = 'View Source';
+      button.addEventListener('click', () => {
         this.dispatchEvent(new CustomEvent('view-source', {
           detail: { agentId },
           bubbles: true,
           composed: true,
         }));
       });
+      container.appendChild(button);
     }
+
+    this.appendChild(container);
   }
 }
 
