@@ -1,5 +1,5 @@
 import { selectionStore } from '../../store/selection';
-import './CommandBox';
+import { CommandBox } from './CommandBox';
 import styles from './PackBuilder.module.css';
 
 export class PackBuilder extends HTMLElement {
@@ -17,7 +17,7 @@ export class PackBuilder extends HTMLElement {
   private setupEventListeners(): void {
     // Handle local toggle change
     this.addEventListener('change', this.handleToggleChange);
-    
+
     // Update command when selection changes
     selectionStore.addEventListener('change', this.handleSelectionChange);
   }
@@ -41,15 +41,13 @@ export class PackBuilder extends HTMLElement {
   };
 
   private updateCommandBox(): void {
-    const commandBox = this.querySelector('command-box') as any;
+    const commandBox = this.querySelector<CommandBox>('command-box');
     if (commandBox) {
       // Update the CommandBox by setting the isLocal property
       commandBox.isLocal = this.isLocal;
-      
+
       // Trigger re-render
-      if (commandBox.render) {
-        commandBox.render();
-      }
+      commandBox.render();
     }
   }
 

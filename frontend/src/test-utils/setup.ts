@@ -16,10 +16,10 @@ window.open = vi.fn();
 
 // Add custom matchers if needed
 expect.extend({
-  toHaveBeenDispatchedWith(received: Event, expectedDetail: any) {
+  toHaveBeenDispatchedWith(received: Event, expectedDetail: unknown) {
     const customEvent = received as CustomEvent;
     const pass = JSON.stringify(customEvent.detail) === JSON.stringify(expectedDetail);
-    
+
     return {
       pass,
       message: () => pass

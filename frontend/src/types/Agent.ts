@@ -14,7 +14,7 @@ export interface Agent {
   prompt?: string;
 }
 
-export type AgentCategory = 
+export type AgentCategory =
   | 'Marketing'
   | 'Security'
   | 'Infrastructure'

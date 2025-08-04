@@ -1,6 +1,6 @@
-import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { fixture, cleanup } from '@test-utils/render';
 import { selectionStore } from '@store/selection';
+import { fixture, cleanup } from '@test-utils/render';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import './SelectedAgents';
 
 describe('SelectedAgents', () => {
@@ -15,16 +15,16 @@ describe('SelectedAgents', () => {
 
   describe('rendering', () => {
     it('should show empty state when no agents selected', async () => {
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       expect(el.textContent).toContain('No agents selected');
     });
 
     it('should display selected agents', async () => {
       selectionStore.select('optimize');
-      
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       expect(el.textContent).toContain('📈');
       expect(el.textContent).toContain('Conversion Optimizer');
       expect(el.textContent).toContain('1 agent selected');
@@ -34,9 +34,9 @@ describe('SelectedAgents', () => {
       selectionStore.select('optimize');
       selectionStore.select('security');
       selectionStore.select('performance');
-      
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       expect(el.textContent).toContain('3 agents selected');
       expect(el.textContent).toContain('Clear all'); // Should show clear all for multiple
     });
@@ -46,20 +46,20 @@ describe('SelectedAgents', () => {
     it('should remove agent when clicking remove button', async () => {
       selectionStore.select('optimize');
       selectionStore.select('security');
-      
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       expect(el.textContent).toContain('2 agents selected');
       expect(el.textContent).toContain('Conversion Optimizer');
-      
+
       // Find and click the first remove button (which should be for optimize)
-      const removeBtns = Array.from(el.querySelectorAll('button')).filter(btn => 
-        btn.textContent?.trim() === '×'
+      const removeBtns = Array.from(el.querySelectorAll('button')).filter(btn =>
+        btn.textContent?.trim() === '×',
       );
       removeBtns[0]?.click();
-      
+
       await new Promise(resolve => setTimeout(resolve, 10));
-      
+
       // Should only have one agent left
       expect(el.textContent).toContain('1 agent selected');
       expect(el.textContent).not.toContain('Conversion Optimizer');
@@ -71,19 +71,19 @@ describe('SelectedAgents', () => {
       selectionStore.select('optimize');
       selectionStore.select('security');
       selectionStore.select('performance');
-      
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       expect(el.textContent).toContain('3 agents selected');
-      
-      const clearBtn = Array.from(el.querySelectorAll('button')).find(btn => 
-        btn.textContent?.includes('Clear all')
+
+      const clearBtn = Array.from(el.querySelectorAll('button')).find(btn =>
+        btn.textContent?.includes('Clear all'),
       ) as HTMLElement;
-      
+
       clearBtn?.click();
-      
+
       await new Promise(resolve => setTimeout(resolve, 10));
-      
+
       expect(el.textContent).toContain('No agents selected');
       expect(selectionStore.getCount()).toBe(0);
     });
@@ -91,32 +91,32 @@ describe('SelectedAgents', () => {
 
   describe('reactivity', () => {
     it('should update when agents are selected', async () => {
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       expect(el.textContent).toContain('No agents selected');
-      
+
       selectionStore.select('optimize');
       await new Promise(resolve => setTimeout(resolve, 10));
-      
+
       expect(el.textContent).toContain('1 agent selected');
       expect(el.textContent).toContain('Conversion Optimizer');
-      
+
       selectionStore.select('security');
       await new Promise(resolve => setTimeout(resolve, 10));
-      
+
       expect(el.textContent).toContain('2 agents selected');
     });
 
     it('should return to empty state when all deselected', async () => {
       selectionStore.select('optimize');
-      
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       expect(el.textContent).toContain('1 agent selected');
-      
+
       selectionStore.clear();
       await new Promise(resolve => setTimeout(resolve, 10));
-      
+
       expect(el.textContent).toContain('No agents selected');
     });
   });
@@ -126,10 +126,10 @@ describe('SelectedAgents', () => {
       // Mock agents data
       const mockAgents = [
         { id: 'test1', name: 'Test Agent 1', icon: '🧪', package: 'test1' },
-        { id: 'test2', name: 'Test Agent 2', icon: '🔬', package: 'test2' }
+        { id: 'test2', name: 'Test Agent 2', icon: '🔬', package: 'test2' },
       ];
 
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
       (el as any).agents = mockAgents;
 
       selectionStore.select('test1');
@@ -145,9 +145,9 @@ describe('SelectedAgents', () => {
 
     it('should handle missing agent gracefully', async () => {
       selectionStore.select('non-existent');
-      
-      const el = await fixture<HTMLElement>(`<selected-agents></selected-agents>`);
-      
+
+      const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
+
       // Should show empty state since the agent doesn't exist
       expect(el.textContent).toContain('No agents selected');
     });

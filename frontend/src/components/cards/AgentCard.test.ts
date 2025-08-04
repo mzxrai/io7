@@ -1,6 +1,6 @@
-import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
-import { fixture, cleanup } from '@test-utils/render';
 import { selectionStore } from '@store/selection';
+import { fixture, cleanup } from '@test-utils/render';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import './AgentCard';
 import '../shared/Badge';
 import './AgentStats';
@@ -45,7 +45,7 @@ describe('AgentCard', () => {
       const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
       expect(checkbox).toBeTruthy();
       expect(checkbox.checked).toBe(false);
-      
+
       // User can check the checkbox
       checkbox.click();
       expect(checkbox.checked).toBe(true);
@@ -145,12 +145,12 @@ describe('AgentCard', () => {
       // The View Source button should be clickable independently
       // This test verifies that the component has proper event handling
       // In practice, clicking View Source shouldn't change selection state
-      
+
       // First select the agent
       const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
       checkbox.click();
       expect(selectionStore.isSelected('optimize')).toBe(true);
-      
+
       // Clicking view source (when implemented) shouldn't deselect
       // For now, this just verifies selection works as expected
       expect(selectionStore.isSelected('optimize')).toBe(true);
@@ -166,10 +166,10 @@ describe('AgentCard', () => {
 
       // Change store externally
       selectionStore.select('optimize');
-      
+
       // Wait for component to react
       await new Promise(resolve => setTimeout(resolve, 10));
-      
+
       expect(checkbox.checked).toBe(true);
     });
   });
@@ -188,14 +188,14 @@ describe('AgentCard', () => {
       stats?.dispatchEvent(new CustomEvent('view-source', {
         detail: { agentId: 'optimize' },
         bubbles: true,
-        composed: true
+        composed: true,
       }));
 
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
-          detail: { agentId: 'optimize' }
-        })
+          detail: { agentId: 'optimize' },
+        }),
       );
     });
 
@@ -213,11 +213,11 @@ describe('AgentCard', () => {
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
-          detail: { 
+          detail: {
             agentId: 'optimize',
-            selected: true
-          }
-        })
+            selected: true,
+          },
+        }),
       );
     });
   });
@@ -229,7 +229,7 @@ describe('AgentCard', () => {
       `);
 
       const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
-      
+
       // Initially not selected
       expect(checkbox.checked).toBe(false);
 
@@ -237,7 +237,7 @@ describe('AgentCard', () => {
 
       // Now selected
       expect(checkbox.checked).toBe(true);
-      
+
       // Verify selection is tracked in store
       expect(selectionStore.isSelected('optimize')).toBe(true);
     });

@@ -1,9 +1,9 @@
-import { selectionStore } from '../../store/selection';
 import { agents } from '../../data/agents';
+import { selectionStore } from '../../store/selection';
 import styles from './SelectedAgents.module.css';
 
 export class SelectedAgents extends HTMLElement {
-  private storeListener: ((event: Event) => void) | null = null;
+  private storeListener: (() => void) | null = null;
   public agents = agents; // Allow override for testing
 
   connectedCallback(): void {
@@ -17,10 +17,10 @@ export class SelectedAgents extends HTMLElement {
 
   private setupEventListeners(): void {
     this.cleanupEventListeners();
-    
+
     this.storeListener = () => this.render();
     selectionStore.addEventListener('change', this.storeListener);
-    
+
     // Handle chip remove clicks
     this.addEventListener('click', this.handleClick);
   }
@@ -35,7 +35,7 @@ export class SelectedAgents extends HTMLElement {
 
   private handleClick = (event: Event): void => {
     const target = event.target as HTMLElement;
-    
+
     // Handle remove button clicks
     if (target.classList.contains(styles.removeBtn) || target.closest(`.${styles.removeBtn}`)) {
       const btn = target.classList.contains(styles.removeBtn) ? target : target.closest(`.${styles.removeBtn}`);
@@ -44,7 +44,7 @@ export class SelectedAgents extends HTMLElement {
         selectionStore.deselect(agentId);
       }
     }
-    
+
     // Handle clear all button
     if (target.classList.contains(styles.clearAllBtn)) {
       selectionStore.clear();
@@ -58,10 +58,10 @@ export class SelectedAgents extends HTMLElement {
     const selectedIds = selectionStore.getSelectedIds();
     const selectedAgents = selectedIds
       .map(id => this.agents.find(a => a.id === id))
-      .filter(agent => agent !== undefined);
+      .filter((agent): agent is typeof this.agents[number] => agent !== undefined);
 
     let content = '';
-    
+
     if (selectedAgents.length === 0) {
       content = `
         <div class="${styles.emptyState}">
@@ -70,22 +70,22 @@ export class SelectedAgents extends HTMLElement {
       `;
     } else {
       const chips = selectedAgents.map(agent => `
-        <div class="${styles.agentChip}" data-agent-id="${agent!.id}">
-          <span class="${styles.agentIcon}">${agent!.icon}</span>
-          <span class="${styles.agentName}">${agent!.name}</span>
+        <div class="${styles.agentChip}" data-agent-id="${agent.id}">
+          <span class="${styles.agentIcon}">${agent.icon}</span>
+          <span class="${styles.agentName}">${agent.name}</span>
           <button 
             class="${styles.removeBtn}" 
-            data-agent-id="${agent!.id}"
-            aria-label="Remove ${agent!.name}"
-            title="Remove ${agent!.name}"
+            data-agent-id="${agent.id}"
+            aria-label="Remove ${agent.name}"
+            title="Remove ${agent.name}"
           >
             ×
           </button>
         </div>
       `).join('');
 
-      const countText = selectedAgents.length === 1 
-        ? '1 agent selected' 
+      const countText = selectedAgents.length === 1
+        ? '1 agent selected'
         : `${selectedAgents.length} agents selected`;
 
       content = `

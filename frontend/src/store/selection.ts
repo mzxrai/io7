@@ -64,7 +64,7 @@ export class SelectionStore extends EventTarget {
   // Command generation
   generateCommand(agents: Agent[], isLocal: boolean = false): string {
     const selectedIds = this.getSelectedIds();
-    
+
     if (selectedIds.length === 0) {
       return '';
     }
@@ -85,7 +85,7 @@ export class SelectionStore extends EventTarget {
     // Build command with comma-separated agents
     const agentList = packages.join(',');
     const localFlag = isLocal ? ' --local' : '';
-    
+
     return `npx io7@latest --install ${agentList}${localFlag}`;
   }
 
@@ -97,7 +97,7 @@ export class SelectionStore extends EventTarget {
         count: this.getCount(),
       },
     }) as SelectionChangeEvent;
-    
+
     this.dispatchEvent(event);
   }
 }

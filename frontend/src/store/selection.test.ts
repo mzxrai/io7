@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { SelectionStore } from './selection';
 import { agents } from '../data/agents';
+import { SelectionStore } from './selection';
 
 describe('SelectionStore', () => {
   let store: SelectionStore;
@@ -32,7 +32,7 @@ describe('SelectionStore', () => {
       store.select('optimize');
       store.select('security');
       store.select('performance');
-      
+
       expect(store.getSelectedIds()).toHaveLength(3);
       expect(store.getSelectedIds()).toContain('optimize');
       expect(store.getSelectedIds()).toContain('security');
@@ -44,7 +44,7 @@ describe('SelectionStore', () => {
       store.select('optimize');
       store.select('optimize');
       store.select('optimize');
-      
+
       expect(store.getSelectedIds()).toHaveLength(1);
       expect(store.getCount()).toBe(1);
     });
@@ -60,9 +60,9 @@ describe('SelectionStore', () => {
     it('should remove agent from selection', () => {
       store.select('optimize');
       store.select('security');
-      
+
       store.deselect('optimize');
-      
+
       expect(store.getSelectedIds()).not.toContain('optimize');
       expect(store.getSelectedIds()).toContain('security');
       expect(store.getCount()).toBe(1);
@@ -71,7 +71,7 @@ describe('SelectionStore', () => {
     it('should handle deselecting non-selected agent', () => {
       store.select('optimize');
       store.deselect('security'); // Not selected
-      
+
       expect(store.getSelectedIds()).toContain('optimize');
       expect(store.getCount()).toBe(1);
     });
@@ -95,9 +95,9 @@ describe('SelectionStore', () => {
       store.select('optimize');
       store.select('security');
       store.select('performance');
-      
+
       store.clear();
-      
+
       expect(store.getSelectedIds()).toEqual([]);
       expect(store.hasSelections()).toBe(false);
       expect(store.getCount()).toBe(0);
@@ -115,7 +115,7 @@ describe('SelectionStore', () => {
       store.select('optimize');
       store.select('security');
       store.select('performance');
-      
+
       const command = store.generateCommand(agents);
       expect(command).toBe('npx io7@latest --install optimize,security-audit,perf-optimizer');
     });
@@ -123,7 +123,7 @@ describe('SelectionStore', () => {
     it('should add --local flag when installing locally', () => {
       store.select('optimize');
       store.select('security');
-      
+
       const command = store.generateCommand(agents, true);
       expect(command).toBe('npx io7@latest --install optimize,security-audit --local');
     });
@@ -144,9 +144,9 @@ describe('SelectionStore', () => {
     it('should emit change event when selecting', () => {
       const listener = vi.fn();
       store.addEventListener('change', listener);
-      
+
       store.select('optimize');
-      
+
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -154,7 +154,7 @@ describe('SelectionStore', () => {
             selectedIds: ['optimize'],
             count: 1,
           },
-        })
+        }),
       );
     });
 
@@ -162,9 +162,9 @@ describe('SelectionStore', () => {
       const listener = vi.fn();
       store.select('optimize');
       store.addEventListener('change', listener);
-      
+
       store.deselect('optimize');
-      
+
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -172,7 +172,7 @@ describe('SelectionStore', () => {
             selectedIds: [],
             count: 0,
           },
-        })
+        }),
       );
     });
 
@@ -181,9 +181,9 @@ describe('SelectionStore', () => {
       store.select('optimize');
       store.select('security');
       store.addEventListener('change', listener);
-      
+
       store.clear();
-      
+
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -191,7 +191,7 @@ describe('SelectionStore', () => {
             selectedIds: [],
             count: 0,
           },
-        })
+        }),
       );
     });
 
@@ -199,9 +199,9 @@ describe('SelectionStore', () => {
       const listener = vi.fn();
       store.addEventListener('change', listener);
       store.removeEventListener('change', listener);
-      
+
       store.select('optimize');
-      
+
       expect(listener).not.toHaveBeenCalled();
     });
   });

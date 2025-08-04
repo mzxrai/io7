@@ -1,10 +1,10 @@
-import { selectionStore } from '../../store/selection';
 import { agents } from '../../data/agents';
+import { selectionStore } from '../../store/selection';
 import '../shared/CopyButton';
 import styles from './CommandBox.module.css';
 
 export class CommandBox extends HTMLElement {
-  private storeListener: ((event: Event) => void) | null = null;
+  private storeListener: (() => void) | null = null;
   public agents = agents; // Allow override for testing
   public isLocal: boolean = false; // Support local installation flag
 
@@ -19,7 +19,7 @@ export class CommandBox extends HTMLElement {
 
   private setupEventListeners(): void {
     this.cleanupEventListeners();
-    
+
     this.storeListener = () => this.render();
     selectionStore.addEventListener('change', this.storeListener);
   }
@@ -29,7 +29,7 @@ export class CommandBox extends HTMLElement {
       selectionStore.removeEventListener('change', this.storeListener);
       this.storeListener = null;
     }
-    
+
     // Remove copy button listener if it exists
     const copyBtn = this.querySelector(`.${styles.copyButton}`) as HTMLButtonElement;
     copyBtn?.removeEventListener('click', this.handleCopyClick);
@@ -43,7 +43,7 @@ export class CommandBox extends HTMLElement {
     this.className = styles.host;
 
     let content = '';
-    
+
     if (selectedCount === 0) {
       content = `
         <div class="${styles.emptyState}">
@@ -64,18 +64,18 @@ export class CommandBox extends HTMLElement {
     }
 
     this.innerHTML = content;
-    
+
     // Add event listener for copy button if it exists
     if (selectedCount > 0) {
       const copyBtn = this.querySelector(`.${styles.copyButton}`) as HTMLButtonElement;
       copyBtn?.addEventListener('click', this.handleCopyClick);
     }
   }
-  
+
   private handleCopyClick = async (event: Event): Promise<void> => {
     const button = event.target as HTMLButtonElement;
     const command = button.getAttribute('data-command');
-    
+
     if (command) {
       try {
         await navigator.clipboard.writeText(command);

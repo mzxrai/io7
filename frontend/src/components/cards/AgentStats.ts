@@ -47,7 +47,7 @@ export class AgentStats extends HTMLElement {
     }
 
     // Show view source button if agent-id provided
-    const viewSourceButton = agentId 
+    const viewSourceButton = agentId
       ? `<button class="${styles.viewSourceBtn}">View Source</button>`
       : '';
 
@@ -68,7 +68,7 @@ export class AgentStats extends HTMLElement {
         this.dispatchEvent(new CustomEvent('view-source', {
           detail: { agentId },
           bubbles: true,
-          composed: true
+          composed: true,
         }));
       });
     }

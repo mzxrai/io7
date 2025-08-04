@@ -19,7 +19,7 @@ export async function fixture<T extends HTMLElement>(html: string): Promise<T> {
   return element;
 }
 
-export function cleanup() {
+export function cleanup(): void {
   document.body.innerHTML = '';
 }
 
@@ -30,7 +30,7 @@ export async function nextFrame(): Promise<void> {
 export function dispatchCustomEvent(
   element: HTMLElement,
   eventName: string,
-  detail?: any
+  detail?: unknown,
 ): void {
   const event = new CustomEvent(eventName, {
     detail,
@@ -43,7 +43,7 @@ export function dispatchCustomEvent(
 // Updated for no Shadow DOM - now just uses regular querySelector
 export function queryShadow<T extends HTMLElement>(
   element: HTMLElement,
-  selector: string
+  selector: string,
 ): T | null {
   // For backward compatibility, just use regular querySelector
   return element.querySelector<T>(selector);
@@ -51,7 +51,7 @@ export function queryShadow<T extends HTMLElement>(
 
 export function queryShadowAll<T extends HTMLElement>(
   element: HTMLElement,
-  selector: string
+  selector: string,
 ): NodeListOf<T> {
   // For backward compatibility, just use regular querySelectorAll
   return element.querySelectorAll<T>(selector);

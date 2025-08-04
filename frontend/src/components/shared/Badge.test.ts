@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from 'vitest';
 import { fixture, cleanup, nextFrame } from '@test-utils/render';
+import { describe, it, expect, afterEach } from 'vitest';
 import './Badge';
 
 describe('Badge', () => {
@@ -47,7 +47,7 @@ describe('Badge', () => {
     it('should update when text attribute changes', async () => {
       const el = await fixture<HTMLElement>('<agent-badge text="Initial"></agent-badge>');
       expect(el.textContent?.trim()).toBe('Initial');
-      
+
       el.setAttribute('text', 'Updated');
       await nextFrame();
       expect(el.textContent?.trim()).toBe('Updated');
@@ -56,7 +56,7 @@ describe('Badge', () => {
     it('should update when icon attribute changes', async () => {
       const el = await fixture<HTMLElement>('<agent-badge text="Badge"></agent-badge>');
       expect(el.textContent?.trim()).toBe('Badge');
-      
+
       el.setAttribute('icon', '🔥');
       await nextFrame();
       expect(el.textContent).toContain('🔥');

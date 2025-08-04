@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach, vi } from 'vitest';
 import { fixture, cleanup } from '@test-utils/render';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import './AgentStats';
 
 describe('AgentStats', () => {
@@ -12,7 +12,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats downloads="12400"></agent-stats>
       `);
-      
+
       // Downloads should be visible with formatted number
       expect(el.textContent).toContain('12.4k');
       expect(el.textContent).toContain('⬇️');
@@ -22,7 +22,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats downloads="85"></agent-stats>
       `);
-      
+
       // Low download count should not be displayed
       expect(el.textContent).not.toContain('⬇️');
       expect(el.textContent).not.toContain('85');
@@ -32,7 +32,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats upvotes="92" votes="234"></agent-stats>
       `);
-      
+
       // Upvote stats should be visible
       expect(el.textContent).toContain('92%');
       expect(el.textContent).toContain('👍');
@@ -43,7 +43,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats upvotes="78" votes="23"></agent-stats>
       `);
-      
+
       // Low vote count should not be displayed
       expect(el.textContent).not.toContain('👍');
       expect(el.textContent).not.toContain('78%');
@@ -53,7 +53,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats last-updated="2d ago"></agent-stats>
       `);
-      
+
       // Update time should be visible
       expect(el.textContent).toContain('Updated 2d ago');
     });
@@ -62,7 +62,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats agent-id="optimize"></agent-stats>
       `);
-      
+
       // View source button should be visible
       expect(el.textContent).toContain('View Source');
     });
@@ -81,7 +81,7 @@ describe('AgentStats', () => {
         const el = await fixture<HTMLElement>(`
           <agent-stats downloads="${downloads}"></agent-stats>
         `);
-        
+
         // Formatted number should be visible
         expect(el.textContent).toContain(expected);
         cleanup();
@@ -98,7 +98,7 @@ describe('AgentStats', () => {
           agent-id="optimize">
         </agent-stats>
       `);
-      
+
       // All stats should be visible
       expect(el.textContent).toContain('⬇️');
       expect(el.textContent).toContain('12.4k');
@@ -114,18 +114,18 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats agent-id="optimize"></agent-stats>
       `);
-      
+
       const listener = vi.fn();
       el.addEventListener('view-source', listener);
-      
+
       const button = el.querySelector('button') as HTMLButtonElement;
       button?.click();
-      
+
       expect(listener).toHaveBeenCalledTimes(1);
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
-          detail: { agentId: 'optimize' }
-        })
+          detail: { agentId: 'optimize' },
+        }),
       );
     });
 
@@ -133,7 +133,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats downloads="12400"></agent-stats>
       `);
-      
+
       // View source button should not be visible without agent-id
       expect(el.textContent).not.toContain('View Source');
     });
@@ -141,7 +141,7 @@ describe('AgentStats', () => {
 
   describe('edge cases', () => {
     it('should handle no attributes gracefully', async () => {
-      const el = await fixture<HTMLElement>(`<agent-stats></agent-stats>`);
+      const el = await fixture<HTMLElement>('<agent-stats></agent-stats>');
       // Component should render but with no visible stats
       expect(el.textContent).not.toContain('⬇️');
       expect(el.textContent).not.toContain('👍');
@@ -153,7 +153,7 @@ describe('AgentStats', () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats downloads="not-a-number" votes="invalid"></agent-stats>
       `);
-      
+
       // Invalid stats should not be displayed
       expect(el.textContent).not.toContain('⬇️');
       expect(el.textContent).not.toContain('NaN');

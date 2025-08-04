@@ -68,7 +68,7 @@ export class CopyButton extends HTMLElement {
       this.dispatchEvent(new CustomEvent('copy', {
         detail: { value },
         bubbles: true,
-        composed: true
+        composed: true,
       }));
     } catch (error) {
       console.error('Failed to copy:', error);

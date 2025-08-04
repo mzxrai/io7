@@ -4,12 +4,12 @@ import './AgentStats';
 import styles from './AgentCard.module.css';
 
 export class AgentCard extends HTMLElement {
-  private storeListener: ((event: Event) => void) | null = null;
+  private storeListener: (() => void) | null = null;
 
   static get observedAttributes(): string[] {
     return [
       'agent-id', 'name', 'category', 'description', 'package',
-      'is-popular', 'downloads', 'upvotes', 'votes', 'last-updated'
+      'is-popular', 'downloads', 'upvotes', 'votes', 'last-updated',
     ];
   }
 
@@ -62,7 +62,7 @@ export class AgentCard extends HTMLElement {
     event.stopPropagation();
     const checkbox = event.target as HTMLInputElement;
     const agentId = this.getAttribute('agent-id');
-    
+
     if (!agentId) return;
 
     if (checkbox.checked) {
@@ -77,7 +77,7 @@ export class AgentCard extends HTMLElement {
 
   private handleCardClick = (event: Event): void => {
     const target = event.target as HTMLElement;
-    
+
     // Don't toggle if clicking on checkbox or view source button
     if (
       target.closest(`.${styles.checkbox}`) ||
@@ -113,7 +113,7 @@ export class AgentCard extends HTMLElement {
     if (!agentId) return;
 
     const isSelected = selectionStore.isSelected(agentId);
-    
+
     if (isSelected) {
       this.classList.add('selected');
     } else {
@@ -128,7 +128,7 @@ export class AgentCard extends HTMLElement {
     this.dispatchEvent(new CustomEvent('agent-selected', {
       detail: { agentId, selected },
       bubbles: true,
-      composed: true
+      composed: true,
     }));
   }
 
@@ -139,14 +139,14 @@ export class AgentCard extends HTMLElement {
     const description = this.getAttribute('description') || '';
     const packageName = this.getAttribute('package') || '';
     const isPopular = this.getAttribute('is-popular') === 'true';
-    
+
     // Stats attributes
     const downloads = this.getAttribute('downloads') || '';
     const upvotes = this.getAttribute('upvotes') || '';
     const votes = this.getAttribute('votes') || '';
     const lastUpdated = this.getAttribute('last-updated') || '';
 
-    const popularBadge = isPopular 
+    const popularBadge = isPopular
       ? '<agent-badge text="Popular" variant="popular"></agent-badge>'
       : '';
 

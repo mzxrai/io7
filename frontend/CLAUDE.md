@@ -36,6 +36,9 @@ npm run dev          # Start dev server
 npm run build        # Build for production
 npm run test         # Run tests
 npm run test:ui      # Run tests with UI
+npm run typecheck    # Run TypeScript type checking
+npm run lint         # Run ESLint to check code quality
+npm run lint:fix     # Auto-fix ESLint issues
 ```
 
 ## Design Principles
@@ -59,8 +62,9 @@ npm run test:ui      # Run tests with UI
 - ALWAYS use TypeScript; avoid type assertions at all costs
 
 ## Development Workflow
-- Run lint & typecheck after all major edits
-- Run all tests frequently to ensure they continue to pass, especially after big changes
+- Run `npm run lint` and `npm run typecheck` after all major edits
+- Run `npm test` frequently to ensure tests continue to pass, especially after big changes
+- Use `npm run lint:fix` to auto-fix formatting issues
 
 ## Testing Guidelines
 - Tests should focus on testing *behavior*, NOT implementation details such as CSS classes or DOM elements
