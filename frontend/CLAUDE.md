@@ -69,5 +69,36 @@ npm run lint:fix     # Auto-fix ESLint issues
 ## Testing Guidelines
 - Tests should focus on testing *behavior*, NOT implementation details such as CSS classes or DOM elements
 
-## Styling Guidelines
-- We use CSS modules for individual component CSS. This is where CSS for components should go -- in a $COMPONENT.module.css file.
+## Styling Architecture
+
+We use a layered CSS architecture for maintainability and consistency:
+
+1. **`styles/tokens.css`**: Design system variables (colors, spacing, fonts)
+   - Single source of truth for all design values
+   - Defines CSS custom properties like `--color-primary`, `--space-4`
+
+2. **`style.css`**: Global base styles and resets
+   - Applied to entire app (body, scrollbars, selection)
+   - Uses design tokens for consistency
+
+3. **`styles/shared.module.css`**: Reusable component patterns
+   - Common styles like `.glassmorphism`, `.buttonBase`
+   - Import and compose with component styles
+
+4. **`[Component].module.css`**: Component-specific styles
+   - Unique styles for individual components
+   - Uses design tokens and can import shared patterns
+
+**Example usage**:
+```typescript
+import sharedStyles from '@styles/shared.module.css';
+import styles from './Component.module.css';
+
+// Combine: <div className={`${sharedStyles.glassmorphism} ${styles.container}`}>
+```
+
+**Key principles**:
+- Use design tokens for all colors, spacing, and typography
+- Keep borders at 1px (don't convert to rem)
+- Use rem for font sizes and large spacing
+- Avoid duplication - extract common patterns to shared.module.css

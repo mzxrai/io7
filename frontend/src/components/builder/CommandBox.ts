@@ -51,10 +51,15 @@ export class CommandBox extends HTMLElement {
         </div>
       `;
     } else {
+      // Use <wbr> tags for line break opportunities - these don't get copied
+      const displayCommand = command
+        .replace(/,/g, ',<wbr>')  // Add word break opportunity after commas
+        .replace(/ /g, ' <wbr>'); // Add word break opportunity after spaces
+
       content = `
         <div class="${styles.commandContainer}">
           <div class="${styles.commandDisplay}">
-            <code class="${styles.commandText}">${command}</code>
+            <code class="${styles.commandText}">${displayCommand}</code>
           </div>
           <button class="${styles.copyButton}" data-command="${command}">
             Copy Install Command

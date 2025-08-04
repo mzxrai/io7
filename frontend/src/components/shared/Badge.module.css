@@ -8,37 +8,37 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 600;
+  gap: var(--space-1);
+  padding: 3px var(--space-1-5);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-2xs);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  letter-spacing: var(--tracking-wider);
+  font-family: var(--font-sans);
 }
 
 .defaultVariant {
-  background: rgba(255, 255, 255, 0.1);
-  color: #999;
+  background: var(--color-border-secondary);
+  color: var(--color-text-subtle);
 }
 
 .popular {
-  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-  color: #000;
+  background: linear-gradient(135deg, var(--color-white) 0%, #ccc 100%);
+  color: var(--color-black);
 }
 
 .stat {
   background: transparent;
-  color: #666;
+  color: var(--color-text-muted);
   padding: 0;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   text-transform: none;
 }
 
 .icon {
-  font-size: 12px;
+  font-size: var(--text-sm);
   line-height: 1;
 }
 

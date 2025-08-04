@@ -1,70 +1,70 @@
-/* App component styles - exact copy from shadow DOM */
+/* App component styles */
 .host {
   display: block;
   min-height: 100vh;
-  background: #000;
-  color: #fff;
+  background: var(--color-black);
+  color: var(--color-white);
   font-family: inherit;
 }
 
 .header {
-  height: 56px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  height: var(--height-header);
+  border-bottom: 1px solid var(--color-border-subtle);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5rem;
+  padding: 0 var(--space-6);
   background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: var(--backdrop-subtle);
+  -webkit-backdrop-filter: var(--backdrop-subtle);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--z-sticky);
 }
 
 .logo {
-  font-size: 1.125rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  letter-spacing: var(--tracking-tight);
 }
 
 .subtitle {
   font-size: 0.8125rem;
-  color: #666;
-  margin-left: 1rem;
-  font-weight: 400;
+  color: var(--color-text-muted);
+  margin-left: var(--space-4);
+  font-weight: var(--font-normal);
 }
 
 .navLinks {
   display: flex;
-  gap: 1.5rem;
+  gap: var(--space-6);
   align-items: center;
 }
 
 .navLink {
-  color: #666;
+  color: var(--color-text-muted);
   text-decoration: none;
   font-size: 0.8125rem;
-  transition: color 0.2s;
+  transition: color var(--transition-base);
   display: flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: var(--space-1-5);
 }
 
 .navLink:hover {
-  color: #fff;
+  color: var(--color-white);
 }
 
 .navIcon {
-  font-size: 1rem;
+  font-size: var(--text-md);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: var(--width-max-content);
   margin: 0 auto;
   display: flex;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: var(--space-6);
+  padding: var(--space-6);
 }
 
 .leftPanel {
@@ -73,10 +73,10 @@
 }
 
 .rightPanel {
-  width: 340px;
+  width: var(--width-sidebar);
   flex-shrink: 0;
   position: sticky;
-  top: 72px; /* header height + padding */
+  top: 4.5rem; /* header height + padding */
   height: fit-content;
 }
 
@@ -84,7 +84,7 @@
 @media (max-width: 1024px) {
   .container {
     flex-direction: column;
-    padding: 1rem;
+    padding: var(--space-4);
   }
 
   .leftPanel {
@@ -97,7 +97,7 @@
   }
 
   .navLinks {
-    gap: 1rem;
+    gap: var(--space-4);
   }
 
   .subtitle {
@@ -107,7 +107,7 @@
 
 @media (max-width: 640px) {
   .header {
-    padding: 0 1rem;
+    padding: 0 var(--space-4);
   }
 
   .navLink span {
@@ -115,6 +115,6 @@
   }
 
   .navIcon {
-    font-size: 1.25rem;
+    font-size: var(--text-xl);
   }
 }

@@ -25,6 +25,7 @@ describe('CommandBox', () => {
 
       const el = await fixture<HTMLElement>('<command-box></command-box>');
 
+      // Text should be clean
       expect(el.textContent).toContain('npx io7@latest --install optimize');
       expect(el.textContent).toContain('Copy Install Command');
     });
@@ -35,6 +36,7 @@ describe('CommandBox', () => {
 
       const el = await fixture<HTMLElement>('<command-box></command-box>');
 
+      // Text should be clean
       expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit');
       expect(el.textContent).toContain('Copy Install Command');
     });
@@ -47,6 +49,10 @@ describe('CommandBox', () => {
       // Copy button should be available with the command
       expect(el.textContent).toContain('Copy');
       expect(el.textContent).toContain('npx io7@latest --install optimize');
+
+      // Verify the copy button has the clean command (without zero-width spaces)
+      const copyBtn = el.querySelector('button[data-command]');
+      expect(copyBtn?.getAttribute('data-command')).toBe('npx io7@latest --install optimize');
     });
   });
 
@@ -105,6 +111,7 @@ describe('CommandBox', () => {
       selectionStore.select('optimize');
       await new Promise(resolve => setTimeout(resolve, 10));
 
+      // Text should be clean
       expect(el.textContent).toContain('npx io7@latest --install optimize');
     });
 
@@ -115,6 +122,7 @@ describe('CommandBox', () => {
 
       const el = await fixture<HTMLElement>('<command-box></command-box>');
 
+      // Text should be clean
       expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit,perf-optimizer');
       expect(el.textContent).toContain('Copy Install Command');
     });

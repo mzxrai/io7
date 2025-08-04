@@ -36,6 +36,9 @@ export class PackBuilder extends HTMLElement {
   };
 
   private handleSelectionChange = (): void => {
+    // Re-render to show/hide checkbox based on selection
+    this.render();
+    this.setupEventListeners();
     // Force re-render of command with current isLocal state
     this.updateCommandBox();
   };
@@ -55,6 +58,8 @@ export class PackBuilder extends HTMLElement {
     // Apply host styles
     this.className = styles.host;
 
+    const hasSelection = selectionStore.getSelectedIds().length > 0;
+
     this.innerHTML = `
       <div class="${styles.container}">
         <div class="${styles.header}">
@@ -62,25 +67,24 @@ export class PackBuilder extends HTMLElement {
         </div>
         
         <div class="${styles.content}">
-          <div class="${styles.toggleContainer}">
-            <input 
-              type="checkbox" 
-              class="${styles.toggle}" 
-              id="local-toggle"
-              ${this.isLocal ? 'checked' : ''}
-            />
-            <label for="local-toggle" class="${styles.toggleLabel}">
-              Install to project
-            </label>
-            <span class="${styles.hint}">
-              ${this.isLocal ? './.claude/agents/' : '~/.claude/agents/'}
-            </span>
-          </div>
-          
           <div class="${styles.section}">
             <div class="${styles.label}">Install Command</div>
             <command-box></command-box>
           </div>
+          
+          ${hasSelection ? `
+            <div class="${styles.toggleContainer}">
+              <input 
+                type="checkbox" 
+                class="${styles.toggle}" 
+                id="local-toggle"
+                ${this.isLocal ? 'checked' : ''}
+              />
+              <label for="local-toggle" class="${styles.toggleLabel}">
+                Install for single project
+              </label>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;

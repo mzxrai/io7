@@ -1,4 +1,4 @@
-/* CommandBox component styles - exact copy from shadow DOM */
+/* CommandBox component styles */
 .host {
   display: block;
 }
@@ -6,53 +6,55 @@
 .commandContainer {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .commandDisplay {
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 16px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
   display: flex;
   align-items: center;
 }
 
 .commandText {
   flex: 1;
-  font-family: var(--font-mono, 'JetBrains Mono', 'SF Mono', Monaco, monospace);
-  font-size: 14px;
-  color: #fff;
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+  color: var(--color-white);
   white-space: normal;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  /* Prevent breaking within package names when possible */
+  word-break: normal;
 }
 
 .emptyState {
-  padding: 24px;
+  padding: var(--space-6);
   text-align: center;
-  color: #666;
-  font-size: 14px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  background: var(--color-bg-secondary);
+  border: 1px dashed var(--color-border-secondary);
+  border-radius: var(--radius-md);
 }
 
 .copyButton {
   width: 100%;
-  padding: 12px 24px;
-  background: rgba(255, 255, 255, 0.95);
-  color: #000;
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-bg-overlay);
+  color: var(--color-black);
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
 }
 
 .copyButton:hover {
-  background: rgba(255, 255, 255, 1);
+  background: var(--color-white);
   transform: translateY(-1px);
 }
 

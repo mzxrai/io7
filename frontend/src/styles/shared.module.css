@@ -1,0 +1,76 @@
+/* Shared Component Patterns */
+
+/* Glassmorphism container - used in multiple components */
+.glassmorphism {
+  background: var(--gradient-glass);
+  backdrop-filter: var(--backdrop-glass);
+  -webkit-backdrop-filter: var(--backdrop-glass);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+/* Button base styles */
+.buttonBase {
+  cursor: pointer;
+  transition: all var(--transition-base);
+  user-select: none;
+  border: none;
+  font-family: inherit;
+}
+
+.buttonBase:hover {
+  transform: translateY(-1px);
+}
+
+.buttonBase:active {
+  transform: translateY(0);
+}
+
+/* Empty state pattern */
+.emptyState {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  background: var(--color-bg-secondary);
+  border: 1px dashed var(--color-border-secondary);
+  border-radius: var(--radius-md);
+}
+
+/* Label styles */
+.label {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+  font-weight: var(--font-medium);
+}
+
+/* Code/mono text */
+.codeText {
+  font-family: var(--font-mono);
+  font-size: var(--text-base);
+}
+
+/* Subtle interactive element */
+.subtleInteractive {
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.subtleInteractive:hover {
+  background: var(--color-bg-hover);
+}
+
+/* Chip/pill style */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1-5) var(--space-2);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  transition: all var(--transition-base);
+}

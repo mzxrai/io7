@@ -1,64 +1,64 @@
-/* SelectedAgents component styles - exact copy from shadow DOM */
+/* SelectedAgents component styles */
 .host {
   display: block;
 }
 
 .selectedContainer {
-  padding: 16px;
+  padding: var(--space-4);
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-md);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
 }
 
 .selectionCount {
-  font-size: 12px;
+  font-size: var(--text-sm);
   color: #888;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
+  letter-spacing: var(--tracking-wider);
+  font-weight: var(--font-medium);
 }
 
 .clearAllBtn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--color-border-strong);
   color: #888;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 12px;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-sm);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
 }
 
 .clearAllBtn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: var(--color-bg-active);
+  color: var(--color-white);
   border-color: rgba(255, 255, 255, 0.3);
 }
 
 .chipsContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .agentChip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
+  gap: var(--space-1-5);
+  padding: var(--space-1-5) var(--space-2);
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  font-size: 13px;
-  color: #fff;
-  transition: all 0.2s;
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  color: var(--color-white);
+  transition: all var(--transition-base);
 }
 
 .agentChip:hover {
@@ -67,29 +67,29 @@
 }
 
 .agentIcon {
-  font-size: 16px;
+  font-size: var(--text-md);
 }
 
 .agentName {
-  color: #fff;
+  color: var(--color-white);
 }
 
 .removeBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: var(--size-icon-sm);
+  height: var(--size-icon-sm);
   padding: 0;
-  margin-left: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-left: var(--space-1);
+  background: var(--color-border-secondary);
+  border: 1px solid var(--color-border-strong);
   border-radius: 50%;
-  color: #aaa;
-  font-size: 18px;
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
   line-height: 1;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
 }
 
 .removeBtn:hover {
@@ -99,11 +99,11 @@
 }
 
 .emptyState {
-  padding: 24px;
+  padding: var(--space-6);
   text-align: center;
-  color: #666;
-  font-size: 14px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  background: var(--color-bg-secondary);
+  border: 1px dashed var(--color-border-secondary);
+  border-radius: var(--radius-md);
 }

@@ -24,6 +24,13 @@ describe('PackBuilder', () => {
       // Should show empty state initially
       expect(el.textContent).toContain('Select agents to build your pack');
     });
+
+    it('should not show checkbox when no agents are selected', async () => {
+      const el = await fixture<HTMLElement>('<pack-builder></pack-builder>');
+
+      // Should not show the checkbox option initially
+      expect(el.textContent).not.toContain('Install for single project');
+    });
   });
 
   describe('integration', () => {
@@ -41,29 +48,22 @@ describe('PackBuilder', () => {
       expect(el.textContent).toContain('npx io7@latest --install optimize');
     });
 
-    it('should toggle between local and global installation', async () => {
+    it('should show checkbox option when agents are selected', async () => {
       const el = await fixture<HTMLElement>('<pack-builder></pack-builder>');
 
-      // Select an agent first
+      // Initially no checkbox option
+      expect(el.textContent).not.toContain('Install for single project');
+
+      // Select an agent
       selectionStore.select('optimize');
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      // Initially shows global install (default)
-      expect(el.textContent).toContain('~/.claude/agents/');
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
-      expect(el.textContent).not.toContain('--local');
-
-      // Find and click the checkbox directly (not the label)
-      const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
-      checkbox?.click();
-
-      // Trigger change event to ensure it's handled
-      checkbox?.dispatchEvent(new Event('change', { bubbles: true }));
       await new Promise(resolve => setTimeout(resolve, 20));
 
-      // Should now show local install
-      expect(el.textContent).toContain('--local');
-      // Note: The hint may not update without a full re-render in the test environment
+      // Should now show the checkbox option
+      expect(el.textContent).toContain('Install for single project');
+
+      // Should show global install by default (no --local flag)
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).not.toContain('--local');
     });
   });
 
