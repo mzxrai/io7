@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 use sqlx::FromRow;
+use sqlx::types::time::OffsetDateTime;
 use std::collections::HashMap;
 use uuid::Uuid;
 
@@ -20,21 +21,20 @@ pub struct AgentStats {
     pub downloads: u64,
     pub upvotes: u64,
     pub votes: u64,
-    pub last_updated: Option<String>,
 }
 
 /// Database model for agents
 #[derive(Debug, FromRow)]
 pub struct AgentDb {
     #[allow(dead_code)]
-    pub id: i64, // Internal ID, not exposed
+    pub id: Option<i64>, // Internal ID, not exposed (can be NULL during insert)
     pub public_id: String,
     pub name: String,
     pub stats: JsonValue,
     #[allow(dead_code)]
-    pub created_at: String,
+    pub created_at: Option<OffsetDateTime>,
     #[allow(dead_code)]
-    pub updated_at: String,
+    pub updated_at: Option<OffsetDateTime>,
 }
 
 /// API response model for agents
@@ -46,6 +46,8 @@ pub struct Agent {
     pub model: Option<String>,
     pub tools: Option<Vec<String>>,
     pub stats: AgentStats,
+    pub content: String, // The markdown content from the agent definition file
+    pub last_updated: Option<String>, // ISO 8601 timestamp from database updated_at
 }
 
 impl AgentDb {
@@ -59,6 +61,9 @@ impl AgentDb {
         let stats: AgentStats = serde_json::from_value(self.stats)
             .unwrap_or_default();
 
+        // Format updated_at as ISO 8601 string if present
+        let last_updated = self.updated_at.map(|dt| dt.to_string());
+
         Agent {
             id: self.public_id,
             name: self.name,
@@ -66,6 +71,8 @@ impl AgentDb {
             model: definition.model.clone(),
             tools: definition.tools.clone(),
             stats,
+            content: definition.content.clone(),
+            last_updated,
         }
     }
 }

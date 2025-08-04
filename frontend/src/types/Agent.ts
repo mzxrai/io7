@@ -1,17 +1,21 @@
 export interface Agent {
   id: string;
   name: string;
-  package: string;
-  category: AgentCategory;
   description: string;
-  icon: string;
-  downloads: number;
-  upvotes?: number;
-  votes?: number;
-  lastUpdated: string;
+  model?: string;
+  tools?: string[];
+  stats: {
+    downloads: number;
+    upvotes: number;
+    votes: number;
+  };
+  content: string;
+  last_updated?: string;
+  // Frontend-specific fields (computed/derived)
+  package?: string;
+  category?: AgentCategory;
+  icon?: string;
   isPopular?: boolean;
-  yaml?: string;
-  prompt?: string;
 }
 
 export type AgentCategory =

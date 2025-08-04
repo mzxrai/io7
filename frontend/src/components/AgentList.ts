@@ -1,17 +1,53 @@
-import { agents } from '../data/agents';
+import { apiService } from '../services/api';
+import type { Agent } from '../types/Agent';
 import './cards/AgentCard';
 import styles from './AgentList.module.css';
 
 export class AgentList extends HTMLElement {
-  public agents = agents; // Allow override for testing
+  private agents: Agent[] = [];
+  private isLoading = true;
+  private error: string | null = null;
 
-  connectedCallback(): void {
+  async connectedCallback(): Promise<void> {
+    await this.loadAgents();
+    this.render();
+  }
+
+  private async loadAgents(): Promise<void> {
+    try {
+      this.isLoading = true;
+      this.error = null;
+      this.agents = await apiService.fetchAgents();
+    } catch (error) {
+      console.error('Failed to load agents:', error);
+      this.error = error instanceof Error ? error.message : 'Failed to load agents';
+      this.agents = [];
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  // Allow override for testing
+  public setAgents(agents: Agent[]): void {
+    this.agents = agents;
+    this.isLoading = false;
+    this.error = null;
     this.render();
   }
 
   public render(): void {
     // Apply host styles
     this.className = styles.host;
+
+    if (this.isLoading) {
+      this.renderLoadingState();
+      return;
+    }
+
+    if (this.error) {
+      this.renderErrorState();
+      return;
+    }
 
     if (this.agents.length === 0) {
       this.renderEmptyState();
@@ -23,8 +59,8 @@ export class AgentList extends HTMLElement {
         agent-id="${agent.id}"
         name="${agent.name}"
         description="${agent.description}"
-        downloads="${agent.downloads || 0}"
-        votes="${agent.votes || 0}"
+        downloads="${agent.stats.downloads || 0}"
+        votes="${agent.stats.votes || 0}"
         ${agent.isPopular ? 'is-popular="true"' : ''}
       ></agent-card>
     `).join('');
@@ -39,6 +75,40 @@ export class AgentList extends HTMLElement {
         </div>
       </div>
     `;
+  }
+
+  private renderLoadingState(): void {
+    this.innerHTML = `
+      <div class="${styles.listWrapper}">
+        <div class="${styles.listHeader}">
+          <h2 class="${styles.listTitle}">Available Agents</h2>
+        </div>
+        <div class="${styles.loadingState}">
+          Loading agents...
+        </div>
+      </div>
+    `;
+  }
+
+  private renderErrorState(): void {
+    this.innerHTML = `
+      <div class="${styles.listWrapper}">
+        <div class="${styles.listHeader}">
+          <h2 class="${styles.listTitle}">Available Agents</h2>
+        </div>
+        <div class="${styles.errorState}">
+          <p>Failed to load agents: ${this.error}</p>
+          <button class="${styles.retryButton}" onclick="this.parentElement.parentElement.parentElement.retry()">
+            Retry
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  public async retry(): Promise<void> {
+    await this.loadAgents();
+    this.render();
   }
 
   private renderEmptyState(): void {

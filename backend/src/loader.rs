@@ -45,7 +45,7 @@ pub fn load_agent_definitions(dir: &Path) -> Result<AgentCache> {
                     description: document.metadata.description,
                     model: document.metadata.model,
                     tools: document.metadata.tools,
-                    content: document.content,
+                    content: content.clone(), // Store the full original content including YAML frontmatter
                 };
                 
                 info!("Loaded agent definition: {}", document.metadata.name);

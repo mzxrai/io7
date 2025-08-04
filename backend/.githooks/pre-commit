@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Git pre-commit hook for SQLx prepare
+# This ensures .sqlx/ query cache is updated before committing
+
+# Only run if we're in the backend directory and have Rust files staged
+if git diff --cached --name-only | grep -q "backend/.*\.rs$"; then
+    echo "Running cargo sqlx prepare for compile-time query checking..."
+    
+    cd backend
+    
+    # Check if DATABASE_URL is set
+    if [ -z "$DATABASE_URL" ]; then
+        export DATABASE_URL="sqlite:dev.db"
+    fi
+    
+    # Ensure database exists
+    if [ ! -f "dev.db" ]; then
+        echo "Creating development database..."
+        touch dev.db
+        # Run migrations
+        cargo sqlx migrate run
+    fi
+    
+    # Run sqlx prepare
+    if cargo sqlx prepare --check; then
+        # Check if .sqlx/ directory has changes
+        if [ -d ".sqlx" ] && [ -n "$(git status --porcelain .sqlx/)" ]; then
+            echo "SQLx query cache updated, adding to commit..."
+            git add .sqlx/
+        fi
+    else
+        echo "Error: cargo sqlx prepare failed!"
+        echo "Fix SQL queries before committing."
+        exit 1
+    fi
+fi

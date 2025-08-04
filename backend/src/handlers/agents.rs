@@ -22,7 +22,8 @@ pub async fn agents_handler(
     State(state): State<AppState>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
     // Query all agents from database
-    let agents_result: Result<Vec<AgentDb>, _> = sqlx::query_as(
+    let agents_result = sqlx::query_as!(
+        AgentDb,
         "SELECT id, public_id, name, stats, created_at, updated_at FROM agents ORDER BY name"
     )
     .fetch_all(&state.pool)
@@ -42,10 +43,7 @@ pub async fn agents_handler(
                 }
             }
             
-            Ok(Json(json!({
-                "agents": agents,
-                "total": agents.len()
-            })))
+            Ok(Json(agents))
         }
         Err(e) => {
             error!("Failed to fetch agents: {}", e);
