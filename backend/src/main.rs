@@ -66,12 +66,12 @@ async fn main() -> Result<()> {
         )
         .with_state(state);
     
-    // Get port from environment or use default
+    // Get port from environment or use default (3000 for dev, PORT env var for production)
     let port = std::env::var("PORT")
         .unwrap_or_else(|_| "3000".to_string())
         .parse::<u16>()?;
     
-    let addr = SocketAddr::from(([127, 0, 0, 1], port));
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     info!("Server listening on http://{}", addr);
     
     // Start server

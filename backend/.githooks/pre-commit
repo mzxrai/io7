@@ -3,11 +3,15 @@
 # Git pre-commit hook for SQLx prepare
 # This ensures .sqlx/ query cache is updated before committing
 
-# Only run if we're in the backend directory and have Rust files staged
+# Find git root and check for staged Rust files in backend
+REPO_ROOT=$(git rev-parse --show-toplevel)
+BACKEND_DIR="$REPO_ROOT/backend"
+
+# Only run if backend has Rust files staged
 if git diff --cached --name-only | grep -q "backend/.*\.rs$"; then
     echo "Running cargo sqlx prepare for compile-time query checking..."
     
-    cd backend
+    cd "$BACKEND_DIR"
     
     # Check if DATABASE_URL is set
     if [ -z "$DATABASE_URL" ]; then
