@@ -1,6 +1,5 @@
 import { selectionStore } from '../../store/selection';
 import './CommandBox';
-import './SelectedAgents';
 import styles from './PackBuilder.module.css';
 
 export class PackBuilder extends HTMLElement {
@@ -81,13 +80,8 @@ export class PackBuilder extends HTMLElement {
           </div>
           
           <div class="${styles.section}">
-            <div class="${styles.label}">Installation Command</div>
+            <div class="${styles.label}">Install Command</div>
             <command-box></command-box>
-          </div>
-          
-          <div class="${styles.section}">
-            <div class="${styles.label}">Selected Agents</div>
-            <selected-agents></selected-agents>
           </div>
         </div>
       </div>

@@ -29,6 +29,10 @@ export class CommandBox extends HTMLElement {
       selectionStore.removeEventListener('change', this.storeListener);
       this.storeListener = null;
     }
+    
+    // Remove copy button listener if it exists
+    const copyBtn = this.querySelector(`.${styles.copyButton}`) as HTMLButtonElement;
+    copyBtn?.removeEventListener('click', this.handleCopyClick);
   }
 
   public render(): void {
@@ -43,27 +47,47 @@ export class CommandBox extends HTMLElement {
     if (selectedCount === 0) {
       content = `
         <div class="${styles.emptyState}">
-          Select agents to generate command
+          Select agents to build your pack
         </div>
       `;
     } else {
-      const label = selectedCount === 1 
-        ? 'Install command'
-        : `Create pack with ${selectedCount} agents`;
-
       content = `
         <div class="${styles.commandContainer}">
-          <div class="${styles.commandLabel}">${label}</div>
           <div class="${styles.commandDisplay}">
             <code class="${styles.commandText}">${command}</code>
-            <copy-button value="${command}" ${selectedCount === 0 ? 'disabled="true"' : ''}></copy-button>
           </div>
+          <button class="${styles.copyButton}" data-command="${command}">
+            Copy Install Command
+          </button>
         </div>
       `;
     }
 
     this.innerHTML = content;
+    
+    // Add event listener for copy button if it exists
+    if (selectedCount > 0) {
+      const copyBtn = this.querySelector(`.${styles.copyButton}`) as HTMLButtonElement;
+      copyBtn?.addEventListener('click', this.handleCopyClick);
+    }
   }
+  
+  private handleCopyClick = async (event: Event): void => {
+    const button = event.target as HTMLButtonElement;
+    const command = button.getAttribute('data-command');
+    
+    if (command) {
+      try {
+        await navigator.clipboard.writeText(command);
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+          button.textContent = 'Copy Install Command';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    }
+  };
 }
 
 // Register the custom element

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, queryShadow, nextFrame } from '@test-utils/render';
+import { fixture, cleanup, nextFrame } from '@test-utils/render';
 import './CopyButton';
 
 describe('CopyButton', () => {
@@ -10,29 +10,21 @@ describe('CopyButton', () => {
   });
 
   describe('rendering', () => {
-    it('should render with default text', async () => {
+    it('should display default text', async () => {
       const el = await fixture<HTMLElement>('<copy-button></copy-button>');
-      const button = queryShadow(el, 'button');
-      expect(button?.textContent?.trim()).toBe('Copy');
+      expect(el.textContent?.trim()).toBe('Copy');
     });
 
-    it('should render with custom text', async () => {
+    it('should display custom text', async () => {
       const el = await fixture<HTMLElement>('<copy-button text="Copy Command"></copy-button>');
-      const button = queryShadow(el, 'button');
-      expect(button?.textContent?.trim()).toBe('Copy Command');
-    });
-
-    it('should have proper button styling', async () => {
-      const el = await fixture<HTMLElement>('<copy-button></copy-button>');
-      const button = queryShadow(el, 'button');
-      expect(button?.classList.contains('copy-button')).toBe(true);
+      expect(el.textContent?.trim()).toBe('Copy Command');
     });
   });
 
   describe('copy functionality', () => {
     it('should copy value to clipboard when clicked', async () => {
       const el = await fixture<HTMLElement>('<copy-button value="test content"></copy-button>');
-      const button = queryShadow(el, 'button');
+      const button = el.querySelector('button');
       
       button?.click();
       await nextFrame();
@@ -40,37 +32,37 @@ describe('CopyButton', () => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith('test content');
     });
 
-    it('should show success state after copying', async () => {
+    it('should show success feedback after copying', async () => {
       const el = await fixture<HTMLElement>('<copy-button value="test"></copy-button>');
-      const button = queryShadow(el, 'button');
+      const button = el.querySelector('button');
       
       button?.click();
       await nextFrame();
       
-      expect(button?.textContent?.trim()).toBe('Copied!');
-      expect(button?.classList.contains('copy-button--success')).toBe(true);
+      // User should see success feedback
+      expect(el.textContent?.trim()).toBe('Copied!');
     });
 
-    it('should revert to original text after success timeout', async () => {
-      // Note: This test is simplified to avoid timer complexity
-      // We're just verifying the success state shows, not the timeout
+    it('should show temporary success feedback', async () => {
       const el = await fixture<HTMLElement>('<copy-button text="Copy" value="test"></copy-button>');
-      const button = queryShadow(el, 'button');
+      const button = el.querySelector('button');
+      
+      // Initial state
+      expect(el.textContent?.trim()).toBe('Copy');
       
       button?.click();
       await nextFrame();
       
-      // Verify success state is shown
-      expect(button?.textContent?.trim()).toBe('Copied!');
-      expect(button?.classList.contains('copy-button--success')).toBe(true);
+      // Success state is shown
+      expect(el.textContent?.trim()).toBe('Copied!');
       
-      // In a real scenario, this would revert after 2 seconds
-      // We tested this manually works in the component
+      // Note: The component reverts after 2 seconds
+      // E2E tests would verify the full interaction
     });
 
     it('should emit copy event with value', async () => {
       const el = await fixture<HTMLElement>('<copy-button value="test content"></copy-button>');
-      const button = queryShadow(el, 'button');
+      const button = el.querySelector('button');
       
       const copyHandler = vi.fn();
       el.addEventListener('copy', copyHandler);
@@ -85,7 +77,7 @@ describe('CopyButton', () => {
 
     it('should not copy if no value provided', async () => {
       const el = await fixture<HTMLElement>('<copy-button></copy-button>');
-      const button = queryShadow(el, 'button');
+      const button = el.querySelector('button');
       
       button?.click();
       await nextFrame();
@@ -97,15 +89,14 @@ describe('CopyButton', () => {
   describe('disabled state', () => {
     it('should be disabled when disabled attribute is set', async () => {
       const el = await fixture<HTMLElement>('<copy-button disabled></copy-button>');
-      const button = queryShadow(el, 'button') as HTMLButtonElement;
+      const button = el.querySelector('button') as HTMLButtonElement;
       
       expect(button?.disabled).toBe(true);
-      expect(button?.classList.contains('copy-button--disabled')).toBe(true);
     });
 
     it('should not copy when disabled', async () => {
       const el = await fixture<HTMLElement>('<copy-button value="test" disabled></copy-button>');
-      const button = queryShadow(el, 'button');
+      const button = el.querySelector('button');
       
       button?.click();
       await nextFrame();

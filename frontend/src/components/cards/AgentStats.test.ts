@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { fixture, cleanup, queryShadow, queryShadowAll } from '@test-utils/render';
+import { fixture, cleanup } from '@test-utils/render';
 import './AgentStats';
 
 describe('AgentStats', () => {
@@ -8,67 +8,63 @@ describe('AgentStats', () => {
   });
 
   describe('rendering stats', () => {
-    it('should render downloads when > 100', async () => {
+    it('should display downloads when > 100', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats downloads="12400"></agent-stats>
       `);
       
-      const stats = queryShadowAll(el, '.stat');
-      const downloadStat = Array.from(stats).find(s => s.textContent?.includes('12.4k'));
-      expect(downloadStat).toBeTruthy();
-      expect(downloadStat?.textContent).toContain('⬇️');
+      // Downloads should be visible with formatted number
+      expect(el.textContent).toContain('12.4k');
+      expect(el.textContent).toContain('⬇️');
     });
 
-    it('should not render downloads when <= 100', async () => {
+    it('should not display downloads when <= 100', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats downloads="85"></agent-stats>
       `);
       
-      const stats = queryShadowAll(el, '.stat');
-      const downloadStat = Array.from(stats).find(s => s.textContent?.includes('⬇️'));
-      expect(downloadStat).toBeFalsy();
+      // Low download count should not be displayed
+      expect(el.textContent).not.toContain('⬇️');
+      expect(el.textContent).not.toContain('85');
     });
 
-    it('should render upvotes when votes > 100', async () => {
+    it('should display upvotes when votes > 100', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats upvotes="92" votes="234"></agent-stats>
       `);
       
-      const stats = queryShadowAll(el, '.stat');
-      const upvoteStat = Array.from(stats).find(s => s.textContent?.includes('92%'));
-      expect(upvoteStat).toBeTruthy();
-      expect(upvoteStat?.textContent).toContain('👍');
-      expect(upvoteStat?.textContent).toContain('(234)');
+      // Upvote stats should be visible
+      expect(el.textContent).toContain('92%');
+      expect(el.textContent).toContain('👍');
+      expect(el.textContent).toContain('(234)');
     });
 
-    it('should not render upvotes when votes <= 100', async () => {
+    it('should not display upvotes when votes <= 100', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats upvotes="78" votes="23"></agent-stats>
       `);
       
-      const stats = queryShadowAll(el, '.stat');
-      const upvoteStat = Array.from(stats).find(s => s.textContent?.includes('👍'));
-      expect(upvoteStat).toBeFalsy();
+      // Low vote count should not be displayed
+      expect(el.textContent).not.toContain('👍');
+      expect(el.textContent).not.toContain('78%');
     });
 
-    it('should render last updated time', async () => {
+    it('should display last updated time', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats last-updated="2d ago"></agent-stats>
       `);
       
-      const stats = queryShadowAll(el, '.stat');
-      const updateStat = Array.from(stats).find(s => s.textContent?.includes('Updated 2d ago'));
-      expect(updateStat).toBeTruthy();
+      // Update time should be visible
+      expect(el.textContent).toContain('Updated 2d ago');
     });
 
-    it('should render view source button', async () => {
+    it('should display view source button', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats agent-id="optimize"></agent-stats>
       `);
       
-      const button = queryShadow(el, '.view-source-btn');
-      expect(button).toBeTruthy();
-      expect(button?.textContent).toBe('View Source');
+      // View source button should be visible
+      expect(el.textContent).toContain('View Source');
     });
   });
 
@@ -86,14 +82,13 @@ describe('AgentStats', () => {
           <agent-stats downloads="${downloads}"></agent-stats>
         `);
         
-        const stats = queryShadowAll(el, '.stat');
-        const downloadStat = Array.from(stats).find(s => s.textContent?.includes(expected));
-        expect(downloadStat).toBeTruthy();
+        // Formatted number should be visible
+        expect(el.textContent).toContain(expected);
         cleanup();
       }
     });
 
-    it('should handle all stats together', async () => {
+    it('should display all stats together', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats 
           downloads="12400" 
@@ -104,12 +99,13 @@ describe('AgentStats', () => {
         </agent-stats>
       `);
       
-      const stats = queryShadowAll(el, '.stat');
-      // Should have 3 stats: downloads, upvotes, updated
-      expect(stats.length).toBe(3);
-      
-      const button = queryShadow(el, '.view-source-btn');
-      expect(button).toBeTruthy();
+      // All stats should be visible
+      expect(el.textContent).toContain('⬇️');
+      expect(el.textContent).toContain('12.4k');
+      expect(el.textContent).toContain('👍');
+      expect(el.textContent).toContain('92%');
+      expect(el.textContent).toContain('Updated');
+      expect(el.textContent).toContain('View Source');
     });
   });
 
@@ -122,7 +118,7 @@ describe('AgentStats', () => {
       const listener = vi.fn();
       el.addEventListener('view-source', listener);
       
-      const button = queryShadow(el, '.view-source-btn') as HTMLButtonElement;
+      const button = el.querySelector('button') as HTMLButtonElement;
       button?.click();
       
       expect(listener).toHaveBeenCalledTimes(1);
@@ -133,25 +129,24 @@ describe('AgentStats', () => {
       );
     });
 
-    it('should not render button if no agent-id provided', async () => {
+    it('should not display view source button if no agent-id provided', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-stats downloads="12400"></agent-stats>
       `);
       
-      const button = queryShadow(el, '.view-source-btn');
-      expect(button).toBeFalsy();
+      // View source button should not be visible without agent-id
+      expect(el.textContent).not.toContain('View Source');
     });
   });
 
   describe('edge cases', () => {
     it('should handle no attributes gracefully', async () => {
       const el = await fixture<HTMLElement>(`<agent-stats></agent-stats>`);
-      const container = queryShadow(el, '.agent-stats');
-      expect(container).toBeTruthy();
-      
-      // Should have no stats
-      const stats = queryShadowAll(el, '.stat');
-      expect(stats.length).toBe(0);
+      // Component should render but with no visible stats
+      expect(el.textContent).not.toContain('⬇️');
+      expect(el.textContent).not.toContain('👍');
+      expect(el.textContent).not.toContain('Updated');
+      expect(el.textContent).not.toContain('View Source');
     });
 
     it('should handle invalid numeric values', async () => {
@@ -159,10 +154,10 @@ describe('AgentStats', () => {
         <agent-stats downloads="not-a-number" votes="invalid"></agent-stats>
       `);
       
-      const stats = queryShadowAll(el, '.stat');
-      // Should not render invalid stats
-      const downloadStat = Array.from(stats).find(s => s.textContent?.includes('⬇️'));
-      expect(downloadStat).toBeFalsy();
+      // Invalid stats should not be displayed
+      expect(el.textContent).not.toContain('⬇️');
+      expect(el.textContent).not.toContain('NaN');
+      expect(el.textContent).not.toContain('not-a-number');
     });
   });
 });

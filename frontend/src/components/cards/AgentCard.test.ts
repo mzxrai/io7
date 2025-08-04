@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
-import { fixture, cleanup, queryShadow } from '@test-utils/render';
+import { fixture, cleanup } from '@test-utils/render';
 import { selectionStore } from '@store/selection';
 import './AgentCard';
 import '../shared/Badge';
@@ -22,27 +22,19 @@ describe('AgentCard', () => {
         <agent-card
           agent-id="optimize"
           name="Conversion Optimizer"
-          icon="📈"
           category="Marketing"
           description="AI-powered conversion rate optimization"
           package="@agenthub/optimize">
         </agent-card>
       `);
 
-      const name = queryShadow(el, '.agent-name');
-      expect(name?.textContent).toContain('Conversion Optimizer');
-
-      const icon = queryShadow(el, '.agent-icon');
-      expect(icon?.textContent).toBe('📈');
-
-      const category = queryShadow(el, '.agent-category');
-      expect(category?.textContent).toBe('Marketing');
-
-      const description = queryShadow(el, '.agent-description');
-      expect(description?.textContent).toContain('AI-powered conversion rate optimization');
+      // Find elements by their content
+      expect(el.textContent).toContain('Conversion Optimizer');
+      expect(el.textContent).toContain('Marketing');
+      expect(el.textContent).toContain('AI-powered conversion rate optimization');
     });
 
-    it('should render checkbox with correct data-package', async () => {
+    it('should allow selection via checkbox', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-card
           agent-id="optimize"
@@ -50,12 +42,16 @@ describe('AgentCard', () => {
         </agent-card>
       `);
 
-      const checkbox = queryShadow(el, 'input[type="checkbox"]') as HTMLInputElement;
+      const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
       expect(checkbox).toBeTruthy();
-      expect(checkbox.getAttribute('data-package')).toBe('@agenthub/optimize');
+      expect(checkbox.checked).toBe(false);
+      
+      // User can check the checkbox
+      checkbox.click();
+      expect(checkbox.checked).toBe(true);
     });
 
-    it('should render popular badge when is-popular is true', async () => {
+    it('should display popular indicator when is-popular is true', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-card
           agent-id="optimize"
@@ -64,12 +60,11 @@ describe('AgentCard', () => {
         </agent-card>
       `);
 
-      const badge = queryShadow(el, 'agent-badge');
-      expect(badge).toBeTruthy();
-      expect(badge?.getAttribute('variant')).toBe('popular');
+      // Popular agents should show a popular indicator
+      expect(el.textContent).toContain('Popular');
     });
 
-    it('should not render popular badge when is-popular is false', async () => {
+    it('should not display popular indicator when is-popular is false', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-card
           agent-id="security"
@@ -78,11 +73,11 @@ describe('AgentCard', () => {
         </agent-card>
       `);
 
-      const badge = queryShadow(el, 'agent-badge');
-      expect(badge).toBeFalsy();
+      // Non-popular agents should not show popular indicator
+      expect(el.textContent).not.toContain('Popular');
     });
 
-    it('should render agent-stats component', async () => {
+    it('should display agent statistics', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-card
           agent-id="optimize"
@@ -93,12 +88,11 @@ describe('AgentCard', () => {
         </agent-card>
       `);
 
-      const stats = queryShadow(el, 'agent-stats');
-      expect(stats).toBeTruthy();
-      expect(stats?.getAttribute('downloads')).toBe('12400');
-      expect(stats?.getAttribute('upvotes')).toBe('92');
-      expect(stats?.getAttribute('votes')).toBe('234');
-      expect(stats?.getAttribute('last-updated')).toBe('2d ago');
+      // Stats should be visible to the user
+      expect(el.textContent).toContain('12.4k'); // formatted downloads
+      expect(el.textContent).toContain('92%'); // upvote percentage
+      expect(el.textContent).toContain('(234)'); // vote count
+      expect(el.textContent).toContain('Updated 2d ago');
     });
   });
 
@@ -111,7 +105,7 @@ describe('AgentCard', () => {
         <agent-card agent-id="optimize"></agent-card>
       `);
 
-      const checkbox = queryShadow(el, 'input[type="checkbox"]') as HTMLInputElement;
+      const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
       expect(checkbox.checked).toBe(true);
     });
 
@@ -120,7 +114,7 @@ describe('AgentCard', () => {
         <agent-card agent-id="optimize"></agent-card>
       `);
 
-      const checkbox = queryShadow(el, 'input[type="checkbox"]') as HTMLInputElement;
+      const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
       expect(checkbox.checked).toBe(false);
 
       checkbox.click();
@@ -149,7 +143,7 @@ describe('AgentCard', () => {
       `);
 
       // Simulate stats component with view source button
-      const stats = queryShadow(el, 'agent-stats');
+      const stats = el.querySelector('agent-stats');
       stats?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
       // Should not toggle selection
@@ -161,7 +155,7 @@ describe('AgentCard', () => {
         <agent-card agent-id="optimize"></agent-card>
       `);
 
-      const checkbox = queryShadow(el, 'input[type="checkbox"]') as HTMLInputElement;
+      const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
       expect(checkbox.checked).toBe(false);
 
       // Change store externally
@@ -184,7 +178,7 @@ describe('AgentCard', () => {
       el.addEventListener('view-source', listener);
 
       // Find and trigger the stats component's view source event
-      const stats = queryShadow(el, 'agent-stats');
+      const stats = el.querySelector('agent-stats');
       stats?.dispatchEvent(new CustomEvent('view-source', {
         detail: { agentId: 'optimize' },
         bubbles: true,
@@ -207,7 +201,7 @@ describe('AgentCard', () => {
       const listener = vi.fn();
       el.addEventListener('agent-selected', listener);
 
-      const checkbox = queryShadow(el, 'input[type="checkbox"]') as HTMLInputElement;
+      const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
       checkbox.click();
 
       expect(listener).toHaveBeenCalledTimes(1);
@@ -222,19 +216,24 @@ describe('AgentCard', () => {
     });
   });
 
-  describe('styling', () => {
-    it('should add selected class when agent is selected', async () => {
+  describe('visual state', () => {
+    it('should reflect selected state through checkbox', async () => {
       const el = await fixture<HTMLElement>(`
         <agent-card agent-id="optimize"></agent-card>
       `);
 
-      // Selected class is now on the host element
-      expect(el.classList.contains('selected')).toBe(false);
+      const checkbox = el.querySelector('input[type="checkbox"]') as HTMLInputElement;
+      
+      // Initially not selected
+      expect(checkbox.checked).toBe(false);
 
-      const checkbox = queryShadow(el, 'input[type="checkbox"]') as HTMLInputElement;
       checkbox.click();
 
-      expect(el.classList.contains('selected')).toBe(true);
+      // Now selected
+      expect(checkbox.checked).toBe(true);
+      
+      // Verify selection is tracked in store
+      expect(selectionStore.isSelected('optimize')).toBe(true);
     });
   });
 });

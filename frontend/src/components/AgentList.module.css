@@ -41,17 +41,6 @@
 
 .agentListContainer agent-card {
   width: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  transition: all 0.15s ease;
-}
-
-.agentListContainer agent-card:hover {
-  background: rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-1px);
 }
 
 .emptyState {

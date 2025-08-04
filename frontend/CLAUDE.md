@@ -61,3 +61,9 @@ npm run test:ui      # Run tests with UI
 ## Development Workflow
 - Run lint & typecheck after all major edits
 - Run all tests frequently to ensure they continue to pass, especially after big changes
+
+## Testing Guidelines
+- Tests should focus on testing *behavior*, NOT implementation details such as CSS classes or DOM elements
+
+## Styling Guidelines
+- We use CSS modules for individual component CSS. This is where CSS for components should go -- in a $COMPONENT.module.css file.

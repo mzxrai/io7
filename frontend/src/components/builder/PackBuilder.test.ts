@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { fixture, cleanup, queryShadow } from '@test-utils/render';
+import { fixture, cleanup } from '@test-utils/render';
 import { selectionStore } from '@store/selection';
 import './PackBuilder';
 
@@ -14,116 +14,62 @@ describe('PackBuilder', () => {
   });
 
   describe('rendering', () => {
-    it('should render CommandBox component', async () => {
+    it('should display pack builder interface', async () => {
       const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
       
-      const commandBox = queryShadow(el, 'command-box');
-      expect(commandBox).toBeTruthy();
-    });
-
-    it('should render SelectedAgents component', async () => {
-      const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
+      // Should show title and sections
+      expect(el.textContent).toContain('Your Agent Pack');
+      expect(el.textContent).toContain('Install Command');
+      expect(el.textContent).toContain('Selected Agents');
       
-      const selectedAgents = queryShadow(el, 'selected-agents');
-      expect(selectedAgents).toBeTruthy();
-    });
-
-    it('should have proper container structure', async () => {
-      const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
-      
-      const container = queryShadow(el, '.pack-builder-container');
-      expect(container).toBeTruthy();
-      
-      const heading = queryShadow(el, '.builder-heading');
-      expect(heading).toBeTruthy();
-      expect(heading?.textContent).toContain('Your Agent Pack');
-    });
-
-    it('should show section labels', async () => {
-      const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
-      
-      const commandSection = queryShadow(el, '.section');
-      expect(commandSection).toBeTruthy();
-      
-      const selectedSection = queryShadow(el, '.section');
-      expect(selectedSection).toBeTruthy();
-    });
-
-    it('should have sticky positioning styles', async () => {
-      const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
-      
-      const container = queryShadow(el, '.pack-builder-container');
-      
-      // Check if container exists with proper class
-      expect(container?.className).toContain('pack-builder-container');
+      // Should show empty state initially
+      expect(el.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).toContain('No agents selected');
     });
   });
 
   describe('integration', () => {
-    it('should update both child components when selection changes', async () => {
+    it('should update display when agents are selected', async () => {
       const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
       
-      // Initially empty
-      let commandBox = queryShadow(el, 'command-box');
-      let commandEmpty = queryShadow(commandBox as HTMLElement, '.empty-state');
-      expect(commandEmpty).toBeTruthy();
-      
-      let selectedAgents = queryShadow(el, 'selected-agents');
-      let selectedEmpty = queryShadow(selectedAgents as HTMLElement, '.empty-state');
-      expect(selectedEmpty).toBeTruthy();
+      // Initially shows empty states
+      expect(el.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).toContain('No agents selected');
       
       // Select an agent
       selectionStore.select('optimize');
       await new Promise(resolve => setTimeout(resolve, 20));
       
-      // Both should update
-      commandBox = queryShadow(el, 'command-box');
-      const commandText = queryShadow(commandBox as HTMLElement, '.command-text');
-      expect(commandText).toBeTruthy();
-      expect(commandText?.textContent).toContain('optimize');
-      
-      selectedAgents = queryShadow(el, 'selected-agents');
-      const agentChip = queryShadow(selectedAgents as HTMLElement, '.agent-chip');
-      expect(agentChip).toBeTruthy();
+      // Should show the command and selected agent
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('Conversion Optimizer');
     });
 
-    it('should handle local installation toggle', async () => {
+    it('should toggle between local and global installation', async () => {
       const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
       
-      const localToggle = queryShadow(el, '.local-toggle') as HTMLInputElement;
-      expect(localToggle).toBeTruthy();
-      expect(localToggle?.type).toBe('checkbox');
-      
-      // Initially unchecked (global install)
-      expect(localToggle?.checked).toBe(false);
-      
-      // Check the toggle
-      localToggle?.click();
-      await new Promise(resolve => setTimeout(resolve, 10));
-      
-      expect(localToggle?.checked).toBe(true);
-      
-      // Select an agent and verify command includes --local
+      // Select an agent first
       selectionStore.select('optimize');
       await new Promise(resolve => setTimeout(resolve, 10));
       
-      const commandBox = queryShadow(el, 'command-box');
-      const commandText = queryShadow(commandBox as HTMLElement, '.command-text');
-      expect(commandText?.textContent).toContain('--local');
+      // Initially shows global install (default)
+      expect(el.textContent).toContain('~/.claude/agents/');
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).not.toContain('--local');
+      
+      // Find and click the local installation toggle
+      // Look for clickable element near "Install to project" text
+      const labels = el.querySelectorAll('label');
+      const localLabel = Array.from(labels).find(label => 
+        label.textContent?.includes('Install to project')
+      );
+      localLabel?.click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      // Should now show local install
+      expect(el.textContent).toContain('./.claude/agents/');
+      expect(el.textContent).toContain('--local');
     });
   });
 
-  describe('layout', () => {
-    it('should stack components vertically', async () => {
-      const el = await fixture<HTMLElement>(`<pack-builder></pack-builder>`);
-      
-      const sections = el.shadowRoot?.querySelectorAll('.section');
-      
-      expect(sections).toBeTruthy();
-      expect(sections?.length).toBeGreaterThan(0);
-      sections?.forEach(section => {
-        expect(section).toBeTruthy();
-      });
-    });
-  });
 });

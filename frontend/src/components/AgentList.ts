@@ -23,7 +23,6 @@ export class AgentList extends HTMLElement {
         agent-id="${agent.id}"
         name="${agent.name}"
         description="${agent.description}"
-        icon="${agent.icon}"
         downloads="${agent.downloads || 0}"
         votes="${agent.votes || 0}"
         ${agent.isPopular ? 'is-popular="true"' : ''}

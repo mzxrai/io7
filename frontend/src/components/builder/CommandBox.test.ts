@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
-import { fixture, cleanup, queryShadow } from '@test-utils/render';
+import { fixture, cleanup } from '@test-utils/render';
 import { selectionStore } from '@store/selection';
 import './CommandBox';
 
@@ -17,13 +17,7 @@ describe('CommandBox', () => {
     it('should show empty state when no agents selected', async () => {
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      // Look for empty state by content
-      const divs = el.querySelectorAll('div');
-      const emptyState = Array.from(divs).find(div => 
-        div.textContent?.includes('Select agents to generate command')
-      );
-      expect(emptyState).toBeTruthy();
-      expect(emptyState?.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).toContain('Select agents to generate command');
     });
 
     it('should show single agent command', async () => {
@@ -31,18 +25,8 @@ describe('CommandBox', () => {
       
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      // Find command text by looking for the specific content
-      const divs = el.querySelectorAll('div');
-      const command = Array.from(divs).find(div => 
-        div.textContent === 'npx io7@latest --install optimize'
-      );
-      expect(command?.textContent).toBe('npx io7@latest --install optimize');
-      
-      // Find label
-      const label = Array.from(divs).find(div => 
-        div.textContent?.includes('Install command')
-      );
-      expect(label?.textContent).toContain('Install command');
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('Install command');
     });
 
     it('should show multi-agent pack command', async () => {
@@ -51,35 +35,18 @@ describe('CommandBox', () => {
       
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      // Find command text
-      const divs = el.querySelectorAll('div');
-      const command = Array.from(divs).find(div => 
-        div.textContent === 'npx io7@latest --install optimize,security-audit'
-      );
-      expect(command?.textContent).toBe('npx io7@latest --install optimize,security-audit');
-      
-      // Find label
-      const label = Array.from(divs).find(div => 
-        div.textContent?.includes('Create pack with 2 agents')
-      );
-      expect(label?.textContent).toContain('Create pack with 2 agents');
+      expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit');
+      expect(el.textContent).toContain('Create pack with 2 agents');
     });
 
-    it('should include CopyButton component', async () => {
+    it('should provide copy functionality when agents selected', async () => {
       selectionStore.select('optimize');
       
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      const copyButton = el.querySelector('copy-button');
-      expect(copyButton).toBeTruthy();
-      expect(copyButton?.getAttribute('value')).toBe('npx io7@latest --install optimize');
-    });
-
-    it('should not render CopyButton when no selection', async () => {
-      const el = await fixture<HTMLElement>(`<command-box></command-box>`);
-      
-      const copyButton = el.querySelector('copy-button');
-      expect(copyButton).toBeFalsy(); // No CopyButton in empty state
+      // Copy button should be available with the command
+      expect(el.textContent).toContain('Copy');
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
     });
   });
 
@@ -87,30 +54,23 @@ describe('CommandBox', () => {
     it('should update when selection changes', async () => {
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      // Initially empty
-      let divs = el.querySelectorAll('div');
-      let command = Array.from(divs).find(div => 
-        div.textContent?.includes('npx io7@latest')
-      );
-      expect(command).toBeFalsy(); // Empty state
+      // Initially shows empty state
+      expect(el.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).not.toContain('npx io7@latest');
       
       selectionStore.select('optimize');
       await new Promise(resolve => setTimeout(resolve, 10));
       
-      divs = el.querySelectorAll('div');
-      command = Array.from(divs).find(div => 
-        div.textContent === 'npx io7@latest --install optimize'
-      );
-      expect(command?.textContent).toBe('npx io7@latest --install optimize');
+      // Shows single agent command
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('Install command');
       
       selectionStore.select('security');
       await new Promise(resolve => setTimeout(resolve, 10));
       
-      divs = el.querySelectorAll('div');
-      command = Array.from(divs).find(div => 
-        div.textContent === 'npx io7@latest --install optimize,security-audit'
-      );
-      expect(command?.textContent).toBe('npx io7@latest --install optimize,security-audit');
+      // Shows multi-agent command
+      expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit');
+      expect(el.textContent).toContain('Create pack with 2 agents');
     });
 
     it('should return to empty state when all deselected', async () => {
@@ -118,25 +78,15 @@ describe('CommandBox', () => {
       
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      let divs = el.querySelectorAll('div');
-      let command = Array.from(divs).find(div => 
-        div.textContent?.includes('npx io7@latest')
-      );
-      expect(command).toBeTruthy();
+      // Initially shows command
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
       
       selectionStore.clear();
       await new Promise(resolve => setTimeout(resolve, 10));
       
-      divs = el.querySelectorAll('div');
-      command = Array.from(divs).find(div => 
-        div.textContent?.includes('npx io7@latest')
-      );
-      expect(command).toBeFalsy();
-      
-      const emptyState = Array.from(divs).find(div => 
-        div.textContent?.includes('Select agents to generate command')
-      );
-      expect(emptyState).toBeTruthy();
+      // Back to empty state
+      expect(el.textContent).toContain('Select agents to generate command');
+      expect(el.textContent).not.toContain('npx io7@latest');
     });
   });
 
@@ -155,11 +105,7 @@ describe('CommandBox', () => {
       selectionStore.select('optimize');
       await new Promise(resolve => setTimeout(resolve, 10));
 
-      const divs = el.querySelectorAll('div');
-      const command = Array.from(divs).find(div => 
-        div.textContent === 'npx io7@latest --install optimize'
-      );
-      expect(command?.textContent).toBe('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install optimize');
     });
 
     it('should show agent count in label for multi-selection', async () => {
@@ -169,11 +115,7 @@ describe('CommandBox', () => {
       
       const el = await fixture<HTMLElement>(`<command-box></command-box>`);
       
-      const divs = el.querySelectorAll('div');
-      const label = Array.from(divs).find(div => 
-        div.textContent?.includes('3 agents')
-      );
-      expect(label?.textContent).toContain('3 agents');
+      expect(el.textContent).toContain('Create pack with 3 agents');
     });
   });
 });

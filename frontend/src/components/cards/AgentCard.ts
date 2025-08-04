@@ -8,7 +8,7 @@ export class AgentCard extends HTMLElement {
 
   static get observedAttributes(): string[] {
     return [
-      'agent-id', 'name', 'icon', 'category', 'description', 'package',
+      'agent-id', 'name', 'category', 'description', 'package',
       'is-popular', 'downloads', 'upvotes', 'votes', 'last-updated'
     ];
   }
@@ -78,12 +78,12 @@ export class AgentCard extends HTMLElement {
   private handleCardClick = (event: Event): void => {
     const target = event.target as HTMLElement;
     
-    // Don't toggle if clicking on checkbox, stats, or their children
+    // Don't toggle if clicking on checkbox or view source button
     if (
       target.closest(`.${styles.checkbox}`) ||
       target.closest(`.${styles.checkboxWrapper}`) ||
-      target.closest('agent-stats') ||
-      target.tagName === 'AGENT-STATS'
+      target.closest('button') ||
+      target.tagName === 'BUTTON'
     ) {
       return;
     }
@@ -135,7 +135,6 @@ export class AgentCard extends HTMLElement {
   private render(): void {
     const agentId = this.getAttribute('agent-id') || '';
     const name = this.getAttribute('name') || '';
-    const icon = this.getAttribute('icon') || '';
     const category = this.getAttribute('category') || '';
     const description = this.getAttribute('description') || '';
     const packageName = this.getAttribute('package') || '';
@@ -163,7 +162,6 @@ export class AgentCard extends HTMLElement {
                  data-package="${packageName}">
         </div>
         <div class="${styles.header}">
-          <div class="${styles.icon}">${icon}</div>
           <div class="${styles.info}">
             <div class="${styles.name}">
               ${name}

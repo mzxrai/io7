@@ -15,20 +15,10 @@
   padding: 20px;
   transition: all 0.2s ease;
   position: relative;
-  pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-}
-
-.card * {
-  pointer-events: none;
-}
-
-.card input[type="checkbox"],
-.card agent-stats {
-  pointer-events: auto;
 }
 
 .host:hover .card {
@@ -56,15 +46,7 @@
 }
 
 .header {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
   margin-bottom: 12px;
-}
-
-.icon {
-  font-size: 32px;
-  line-height: 1;
 }
 
 .info {
