@@ -120,7 +120,11 @@ async fn main() -> Result<()> {
     
     // Start server
     let listener = tokio::net::TcpListener::bind(addr).await?;
-    axum::serve(listener, app).await?;
+    
+    if let Err(e) = axum::serve(listener, app).await {
+        tracing::error!("Server error: {}", e);
+        return Err(e.into());
+    }
     
     Ok(())
 }
