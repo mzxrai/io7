@@ -60,16 +60,29 @@ async fn main() -> Result<()> {
     // Connect to database
     let database_url = std::env::var("DATABASE_URL")
         .expect("DATABASE_URL must be set");
+    
+    info!("Creating database pool...");
+    let start = std::time::Instant::now();
     let pool = db::create_pool(&database_url).await?;
+    info!("Database pool created in {:?}", start.elapsed());
     
     // Run migrations
+    info!("Running migrations...");
+    let start = std::time::Instant::now();
     db::run_migrations(&pool).await?;
+    info!("Migrations completed in {:?}", start.elapsed());
     
     // Initialize sample data if needed
+    info!("Initializing sample data...");
+    let start = std::time::Instant::now();
     db::init_sample_data(&pool).await?;
+    info!("Sample data initialized in {:?}", start.elapsed());
     
     // Sync agents from files to database
+    info!("Syncing agents to database...");
+    let start = std::time::Instant::now();
     db::sync_agents_to_db(&pool, &agent_cache).await?;
+    info!("Agent sync completed in {:?}", start.elapsed());
     
     // Create app state with empty cache
     let state = AppState {
