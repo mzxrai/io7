@@ -6,6 +6,9 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  /* Eliminate tap delays on mobile */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .card {
@@ -21,10 +24,19 @@
   -ms-user-select: none;
 }
 
-.host:hover .card {
-  background: rgba(255, 255, 255, 0.04);
+/* Only apply hover effects on devices that support hover (non-touch) */
+@media (hover: hover) and (pointer: fine) {
+  .host:hover .card {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: var(--color-border-secondary);
+    transform: translateY(-2px);
+  }
+}
+
+/* Active state for better touch feedback */
+.host:active .card {
+  background: rgba(255, 255, 255, 0.06);
   border-color: var(--color-border-secondary);
-  transform: translateY(-2px);
 }
 
 .host.selected .card {
