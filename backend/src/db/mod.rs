@@ -10,7 +10,10 @@ pub use sync::sync_agents_to_db;
 pub async fn create_pool(database_url: &str) -> Result<PgPool> {
     let pool = PgPoolOptions::new()
         .max_connections(5)
-        .acquire_timeout(Duration::from_secs(10))  // Increase timeout to 10 seconds
+        .min_connections(1)  // Keep at least 1 connection alive
+        .acquire_timeout(Duration::from_secs(15))  // Increase timeout to 15 seconds
+        .idle_timeout(Duration::from_secs(600))  // Keep connections alive for 10 minutes
+        .max_lifetime(Duration::from_secs(1800))  // Recycle connections after 30 minutes
         .connect(database_url)
         .await?;
     
