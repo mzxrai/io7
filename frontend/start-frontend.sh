@@ -1,2 +1,2 @@
 #\!/bin/bash
-exec npm run dev > /tmp/frontend-server.log 2>&1
+exec npm run dev > /tmp/vite-frontend.log 2>&1

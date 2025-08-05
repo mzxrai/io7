@@ -1,10 +1,10 @@
 import { apiService } from '../services/api';
+import { agentStore } from '../store/agents';
 import type { Agent } from '../types/Agent';
 import './cards/AgentCard';
 import styles from './AgentList.module.css';
 
 export class AgentList extends HTMLElement {
-  private agents: Agent[] = [];
   private isLoading = true;
   private error: string | null = null;
 
@@ -17,11 +17,13 @@ export class AgentList extends HTMLElement {
     try {
       this.isLoading = true;
       this.error = null;
-      this.agents = await apiService.fetchAgents();
+      const agents = await apiService.fetchAgents();
+      // Update the global agent store
+      agentStore.setAgents(agents);
     } catch (error) {
       console.error('Failed to load agents:', error);
       this.error = error instanceof Error ? error.message : 'Failed to load agents';
-      this.agents = [];
+      agentStore.setAgents([]);
     } finally {
       this.isLoading = false;
     }
@@ -29,9 +31,9 @@ export class AgentList extends HTMLElement {
 
   // Allow override for testing
   public setAgents(agents: Agent[]): void {
-    this.agents = agents;
     this.isLoading = false;
     this.error = null;
+    agentStore.setAgents(agents);
     this.render();
   }
 
@@ -49,12 +51,13 @@ export class AgentList extends HTMLElement {
       return;
     }
 
-    if (this.agents.length === 0) {
+    const agents = agentStore.getAgents();
+    if (agents.length === 0) {
       this.renderEmptyState();
       return;
     }
 
-    const agentCards = this.agents.map(agent => `
+    const agentCards = agents.map(agent => `
       <agent-card
         agent-id="${agent.id}"
         name="${agent.name}"

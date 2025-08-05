@@ -1,4 +1,6 @@
+import { agentStore } from '@store/agents';
 import { selectionStore } from '@store/selection';
+import { mockAgents } from '@test-utils/fixtures';
 import { fixture, cleanup } from '@test-utils/render';
 import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import './CommandBox';
@@ -6,6 +8,7 @@ import './CommandBox';
 describe('CommandBox', () => {
   beforeEach(() => {
     selectionStore.clear();
+    agentStore.setAgents(mockAgents);
   });
 
   afterEach(() => {

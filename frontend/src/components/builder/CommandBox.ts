@@ -1,11 +1,11 @@
-import { agents } from '../../data/agents';
+import { agentStore } from '../../store/agents';
 import { selectionStore } from '../../store/selection';
 import '../shared/CopyButton';
 import styles from './CommandBox.module.css';
 
 export class CommandBox extends HTMLElement {
   private storeListener: (() => void) | null = null;
-  public agents = agents; // Allow override for testing
+  private agentStoreListener: (() => void) | null = null;
   public isLocal: boolean = false; // Support local installation flag
 
   connectedCallback(): void {
@@ -22,12 +22,20 @@ export class CommandBox extends HTMLElement {
 
     this.storeListener = () => this.render();
     selectionStore.addEventListener('change', this.storeListener);
+
+    this.agentStoreListener = () => this.render();
+    agentStore.addEventListener('agents-updated', this.agentStoreListener);
   }
 
   private cleanupEventListeners(): void {
     if (this.storeListener) {
       selectionStore.removeEventListener('change', this.storeListener);
       this.storeListener = null;
+    }
+
+    if (this.agentStoreListener) {
+      agentStore.removeEventListener('agents-updated', this.agentStoreListener);
+      this.agentStoreListener = null;
     }
 
     // Remove copy button listener if it exists
@@ -37,7 +45,7 @@ export class CommandBox extends HTMLElement {
 
   public render(): void {
     const selectedCount = selectionStore.getSelectedIds().length;
-    const command = selectionStore.generateCommand(this.agents, this.isLocal);
+    const command = selectionStore.generateCommand(agentStore.getAgents(), this.isLocal);
 
     // Apply host styles
     this.className = styles.host;
