@@ -27,6 +27,7 @@ export default [
         clearTimeout: 'readonly',
         Event: 'readonly',
         MouseEvent: 'readonly',
+        fetch: 'readonly',
       },
     },
     plugins: {

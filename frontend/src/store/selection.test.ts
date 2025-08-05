@@ -108,7 +108,7 @@ describe('SelectionStore', () => {
     it('should generate npx command for single agent', () => {
       store.select('optimize');
       const command = store.generateCommand(agents);
-      expect(command).toBe('npx io7@latest --install optimize');
+      expect(command).toBe('npx io7@latest --install conversion-optimizer');
     });
 
     it('should generate npx command for multiple agents', () => {
@@ -117,7 +117,7 @@ describe('SelectionStore', () => {
       store.select('performance');
 
       const command = store.generateCommand(agents);
-      expect(command).toBe('npx io7@latest --install optimize,security-audit,perf-optimizer');
+      expect(command).toBe('npx io7@latest --install conversion-optimizer,security-auditor,performance-optimizer');
     });
 
     it('should add --local flag when installing locally', () => {
@@ -125,7 +125,7 @@ describe('SelectionStore', () => {
       store.select('security');
 
       const command = store.generateCommand(agents, true);
-      expect(command).toBe('npx io7@latest --install optimize,security-audit --local');
+      expect(command).toBe('npx io7@latest --install conversion-optimizer,security-auditor --local');
     });
 
     it('should return empty string when no selections', () => {

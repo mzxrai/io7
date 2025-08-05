@@ -11,12 +11,14 @@ describe('AgentList', () => {
   describe('rendering', () => {
     it('should display the title', async () => {
       const el = await fixture<HTMLElement>('<agent-list></agent-list>');
+      (el as any).setAgents(agents);
 
       expect(el.textContent).toContain('Available Agents');
     });
 
     it('should display all agent cards', async () => {
       const el = await fixture<HTMLElement>('<agent-list></agent-list>');
+      (el as any).setAgents(agents);
 
       // Verify we can see agent names from the data
       expect(el.textContent).toContain(agents[0].name);
@@ -29,6 +31,7 @@ describe('AgentList', () => {
 
     it('should pass correct data to agent cards', async () => {
       const el = await fixture<HTMLElement>('<agent-list></agent-list>');
+      (el as any).setAgents(agents);
 
       // Verify first agent's data is displayed
       const firstCard = el.querySelector('agent-card');
@@ -41,10 +44,7 @@ describe('AgentList', () => {
   describe('empty state', () => {
     it('should show empty message when no agents', async () => {
       const el = await fixture<HTMLElement>('<agent-list></agent-list>');
-      (el as any).agents = [];
-      (el as any).render();
-
-      await new Promise(resolve => setTimeout(resolve, 10));
+      (el as any).setAgents([]);
 
       // Verify empty state message is displayed
       expect(el.textContent).toContain('No agents available');
@@ -56,19 +56,19 @@ describe('AgentList', () => {
       // Create 100 mock agents
       const manyAgents = Array.from({ length: 100 }, (_, i) => ({
         id: `agent-${i}`,
-        name: `Agent ${i}`,
-        package: `agent-${i}`,
+        name: `agent-${i}`,
         description: `Description for agent ${i}`,
         icon: '🤖',
-        downloads: Math.floor(Math.random() * 10000),
-        votes: Math.floor(Math.random() * 500),
+        stats: {
+          downloads: Math.floor(Math.random() * 10000),
+          upvotes: Math.floor(Math.random() * 100),
+          votes: Math.floor(Math.random() * 500),
+        },
+        content: '',
       }));
 
       const el = await fixture<HTMLElement>('<agent-list></agent-list>');
-      (el as any).agents = manyAgents;
-      (el as any).render();
-
-      await new Promise(resolve => setTimeout(resolve, 10));
+      (el as any).setAgents(manyAgents);
 
       const cards = el.querySelectorAll('agent-card');
       expect(cards).toHaveLength(100);

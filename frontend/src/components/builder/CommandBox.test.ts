@@ -26,7 +26,7 @@ describe('CommandBox', () => {
       const el = await fixture<HTMLElement>('<command-box></command-box>');
 
       // Text should be clean
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer');
       expect(el.textContent).toContain('Copy Install Command');
     });
 
@@ -37,7 +37,7 @@ describe('CommandBox', () => {
       const el = await fixture<HTMLElement>('<command-box></command-box>');
 
       // Text should be clean
-      expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer,security-auditor');
       expect(el.textContent).toContain('Copy Install Command');
     });
 
@@ -48,11 +48,11 @@ describe('CommandBox', () => {
 
       // Copy button should be available with the command
       expect(el.textContent).toContain('Copy');
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer');
 
       // Verify the copy button has the clean command (without zero-width spaces)
       const copyBtn = el.querySelector('button[data-command]');
-      expect(copyBtn?.getAttribute('data-command')).toBe('npx io7@latest --install optimize');
+      expect(copyBtn?.getAttribute('data-command')).toBe('npx io7@latest --install conversion-optimizer');
     });
   });
 
@@ -68,14 +68,14 @@ describe('CommandBox', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       // Shows single agent command
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer');
       expect(el.textContent).toContain('Copy Install Command');
 
       selectionStore.select('security');
       await new Promise(resolve => setTimeout(resolve, 10));
 
       // Shows multi-agent command
-      expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer,security-auditor');
       expect(el.textContent).toContain('Copy Install Command');
     });
 
@@ -85,7 +85,7 @@ describe('CommandBox', () => {
       const el = await fixture<HTMLElement>('<command-box></command-box>');
 
       // Initially shows command
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer');
 
       selectionStore.clear();
       await new Promise(resolve => setTimeout(resolve, 10));
@@ -100,8 +100,8 @@ describe('CommandBox', () => {
     it('should handle agents with proper packages', async () => {
       // Mock agents data
       const mockAgents = [
-        { id: 'optimize', name: 'Optimizer', package: 'optimize' },
-        { id: 'security', name: 'Security', package: 'security-audit' },
+        { id: 'optimize', name: 'conversion-optimizer', stats: { downloads: 0, upvotes: 0, votes: 0 }, content: '' },
+        { id: 'security', name: 'security-auditor', stats: { downloads: 0, upvotes: 0, votes: 0 }, content: '' },
       ];
 
       // Pass agents via attribute
@@ -112,7 +112,7 @@ describe('CommandBox', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       // Text should be clean
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer');
     });
 
     it('should show command for multi-agent selection', async () => {
@@ -123,7 +123,7 @@ describe('CommandBox', () => {
       const el = await fixture<HTMLElement>('<command-box></command-box>');
 
       // Text should be clean
-      expect(el.textContent).toContain('npx io7@latest --install optimize,security-audit,perf-optimizer');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer,security-auditor,performance-optimizer');
       expect(el.textContent).toContain('Copy Install Command');
     });
   });

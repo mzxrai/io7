@@ -12,21 +12,10 @@ export interface Agent {
   content: string;
   last_updated?: string;
   // Frontend-specific fields (computed/derived)
-  package?: string;
-  category?: AgentCategory;
   icon?: string;
   isPopular?: boolean;
 }
 
-export type AgentCategory =
-  | 'Marketing'
-  | 'Security'
-  | 'Infrastructure'
-  | 'Accessibility'
-  | 'Database'
-  | 'Architecture'
-  | 'Quality'
-  | 'Documentation';
 
 export interface AgentSource {
   name: string;

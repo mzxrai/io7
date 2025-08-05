@@ -69,21 +69,21 @@ export class SelectionStore extends EventTarget {
       return '';
     }
 
-    // Get packages for selected agents
-    const packages: string[] = [];
+    // Get agent names for selected agents
+    const agentNames: string[] = [];
     for (const id of selectedIds) {
       const agent = agents.find(a => a.id === id);
       if (agent) {
-        packages.push(agent.package);
+        agentNames.push(agent.name);
       }
     }
 
-    if (packages.length === 0) {
+    if (agentNames.length === 0) {
       return '';
     }
 
     // Build command with comma-separated agents
-    const agentList = packages.join(',');
+    const agentList = agentNames.join(',');
     const localFlag = isLocal ? ' --local' : '';
 
     return `npx io7@latest --install ${agentList}${localFlag}`;

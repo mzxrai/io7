@@ -45,7 +45,7 @@ describe('PackBuilder', () => {
       await new Promise(resolve => setTimeout(resolve, 20));
 
       // Should show the command
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer');
     });
 
     it('should show checkbox option when agents are selected', async () => {
@@ -62,7 +62,7 @@ describe('PackBuilder', () => {
       expect(el.textContent).toContain('Install for single project');
 
       // Should show global install by default (no --local flag)
-      expect(el.textContent).toContain('npx io7@latest --install optimize');
+      expect(el.textContent).toContain('npx io7@latest --install conversion-optimizer');
       expect(el.textContent).not.toContain('--local');
     });
   });

@@ -26,7 +26,7 @@ describe('SelectedAgents', () => {
       const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
 
       expect(el.textContent).toContain('📈');
-      expect(el.textContent).toContain('Conversion Optimizer');
+      expect(el.textContent).toContain('conversion-optimizer');
       expect(el.textContent).toContain('1 agent selected');
     });
 
@@ -50,7 +50,7 @@ describe('SelectedAgents', () => {
       const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');
 
       expect(el.textContent).toContain('2 agents selected');
-      expect(el.textContent).toContain('Conversion Optimizer');
+      expect(el.textContent).toContain('conversion-optimizer');
 
       // Find and click the first remove button (which should be for optimize)
       const removeBtns = Array.from(el.querySelectorAll('button')).filter(btn =>
@@ -62,7 +62,7 @@ describe('SelectedAgents', () => {
 
       // Should only have one agent left
       expect(el.textContent).toContain('1 agent selected');
-      expect(el.textContent).not.toContain('Conversion Optimizer');
+      expect(el.textContent).not.toContain('conversion-optimizer');
       expect(selectionStore.isSelected('optimize')).toBe(false);
       expect(selectionStore.isSelected('security')).toBe(true);
     });
@@ -99,7 +99,7 @@ describe('SelectedAgents', () => {
       await new Promise(resolve => setTimeout(resolve, 10));
 
       expect(el.textContent).toContain('1 agent selected');
-      expect(el.textContent).toContain('Conversion Optimizer');
+      expect(el.textContent).toContain('conversion-optimizer');
 
       selectionStore.select('security');
       await new Promise(resolve => setTimeout(resolve, 10));
@@ -125,8 +125,8 @@ describe('SelectedAgents', () => {
     it('should handle agents with proper data', async () => {
       // Mock agents data
       const mockAgents = [
-        { id: 'test1', name: 'Test Agent 1', icon: '🧪', package: 'test1' },
-        { id: 'test2', name: 'Test Agent 2', icon: '🔬', package: 'test2' },
+        { id: 'test1', name: 'Test Agent 1', icon: '🧪', stats: { downloads: 0, upvotes: 0, votes: 0 }, content: '' },
+        { id: 'test2', name: 'Test Agent 2', icon: '🔬', stats: { downloads: 0, upvotes: 0, votes: 0 }, content: '' },
       ];
 
       const el = await fixture<HTMLElement>('<selected-agents></selected-agents>');

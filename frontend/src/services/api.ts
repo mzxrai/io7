@@ -10,11 +10,11 @@ class ApiClient {
   private getApiBaseUrl(): string {
     // Check if we're in development mode
     const isDev = import.meta.env.DEV || window.location.hostname === 'localhost';
-    
+
     if (isDev) {
       return 'http://localhost:3000';
     }
-    
+
     // Production: Use environment variable or same origin
     return import.meta.env.VITE_API_BASE_URL || window.location.origin;
   }
@@ -22,11 +22,11 @@ class ApiClient {
   async get<T>(endpoint: string): Promise<T> {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error(`Failed to fetch ${endpoint}:`, error);
@@ -34,7 +34,7 @@ class ApiClient {
     }
   }
 
-  async post<T>(endpoint: string, data: any): Promise<T> {
+  async post<T>(endpoint: string, data: unknown): Promise<T> {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         method: 'POST',
@@ -43,11 +43,11 @@ class ApiClient {
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error(`Failed to post to ${endpoint}:`, error);
@@ -90,8 +90,6 @@ export class ApiService {
     return {
       ...agent,
       // Add frontend-specific computed fields
-      package: this.generatePackageName(agent.name),
-      category: this.determineCategory(agent.name, agent.description),
       icon: this.getAgentIcon(agent.name),
       isPopular: agent.stats.downloads > 10000 || agent.stats.upvotes > 90,
     };
@@ -101,50 +99,12 @@ export class ApiService {
     return agents.map(agent => this.enrichAgentWithFrontendData(agent));
   }
 
-  private generatePackageName(name: string): string {
-    return name.toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
-  }
-
-  private determineCategory(name: string, description: string): string {
-    const text = (name + ' ' + description).toLowerCase();
-    
-    if (text.includes('security') || text.includes('vulnerability') || text.includes('audit')) {
-      return 'Security';
-    }
-    if (text.includes('performance') || text.includes('optimization') || text.includes('optimize')) {
-      return 'Infrastructure';
-    }
-    if (text.includes('database') || text.includes('query') || text.includes('schema')) {
-      return 'Database';
-    }
-    if (text.includes('accessibility') || text.includes('a11y') || text.includes('wcag')) {
-      return 'Accessibility';
-    }
-    if (text.includes('test') || text.includes('quality') || text.includes('qa')) {
-      return 'Quality';
-    }
-    if (text.includes('documentation') || text.includes('docs') || text.includes('readme')) {
-      return 'Documentation';
-    }
-    if (text.includes('api') || text.includes('architecture') || text.includes('design')) {
-      return 'Architecture';
-    }
-    if (text.includes('marketing') || text.includes('conversion') || text.includes('optimize')) {
-      return 'Marketing';
-    }
-    
-    return 'Infrastructure'; // Default category
-  }
 
   private getAgentIcon(name: string): string {
     const iconMap: Record<string, string> = {
       'security': '🔒',
       'performance': '⚡',
-      'optimization': '📈', 
+      'optimization': '📈',
       'database': '🗄️',
       'accessibility': '♿',
       'test': '🧪',
@@ -159,7 +119,7 @@ export class ApiService {
         return icon;
       }
     }
-    
+
     return '🤖'; // Default icon
   }
 }
