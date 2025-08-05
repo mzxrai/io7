@@ -39,7 +39,7 @@ async fn main() -> Result<()> {
     
     // Connect to database
     let database_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "sqlite:dev.db".to_string());
+        .expect("DATABASE_URL must be set");
     let pool = db::create_pool(&database_url).await?;
     
     // Run migrations

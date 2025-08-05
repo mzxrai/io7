@@ -27,14 +27,14 @@ pub struct AgentStats {
 #[derive(Debug, FromRow)]
 pub struct AgentDb {
     #[allow(dead_code)]
-    pub id: Option<i64>, // Internal ID, not exposed (can be NULL during insert)
+    pub id: i32, // PostgreSQL SERIAL type
     pub public_id: String,
     pub name: String,
     pub stats: JsonValue,
     #[allow(dead_code)]
-    pub created_at: Option<OffsetDateTime>,
+    pub created_at: OffsetDateTime,
     #[allow(dead_code)]
-    pub updated_at: Option<OffsetDateTime>,
+    pub updated_at: OffsetDateTime,
 }
 
 /// API response model for agents
@@ -61,8 +61,8 @@ impl AgentDb {
         let stats: AgentStats = serde_json::from_value(self.stats)
             .unwrap_or_default();
 
-        // Format updated_at as ISO 8601 string if present
-        let last_updated = self.updated_at.map(|dt| dt.to_string());
+        // Format updated_at as ISO 8601 string
+        let last_updated = Some(self.updated_at.to_string());
 
         Agent {
             id: self.public_id,

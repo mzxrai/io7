@@ -33,15 +33,10 @@ COPY agent_files/ /app/agent_files/
 COPY migrations/ /app/migrations/
 
 # Set environment variables for production
-ENV DATABASE_URL=sqlite:/data/app.db
+# DATABASE_URL will be provided by Railway PostgreSQL
 ENV RUST_LOG=info
 ENV PORT=8080
 
-# Create entrypoint script to ensure /data exists and is writable
-RUN echo '#!/bin/sh\nset -e\nmkdir -p /data\nchmod 755 /data\nexec "$@"' > /entrypoint.sh && \
-    chmod +x /entrypoint.sh
-
 EXPOSE 8080
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["./io7-backend"]
+CMD ["/app/io7-backend"]

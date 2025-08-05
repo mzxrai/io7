@@ -5,7 +5,7 @@ use axum::{
     response::IntoResponse,
 };
 use serde_json::json;
-use sqlx::SqlitePool;
+use sqlx::PgPool;
 use std::sync::Arc;
 use tracing::error;
 
@@ -13,7 +13,7 @@ use crate::models::agent::{AgentCache, AgentDb};
 
 #[derive(Clone)]
 pub struct AppState {
-    pub pool: SqlitePool,
+    pub pool: PgPool,
     pub agent_cache: Arc<AgentCache>,
 }
 

@@ -1,49 +1,49 @@
 {
-  "db_name": "SQLite",
+  "db_name": "PostgreSQL",
   "query": "SELECT id, public_id, name, stats, created_at, updated_at FROM agents ORDER BY name",
   "describe": {
     "columns": [
       {
-        "name": "id",
         "ordinal": 0,
-        "type_info": "Integer"
+        "name": "id",
+        "type_info": "Int4"
       },
       {
-        "name": "public_id",
         "ordinal": 1,
+        "name": "public_id",
         "type_info": "Text"
       },
       {
-        "name": "name",
         "ordinal": 2,
+        "name": "name",
         "type_info": "Text"
       },
       {
-        "name": "stats",
         "ordinal": 3,
-        "type_info": "Text"
+        "name": "stats",
+        "type_info": "Jsonb"
       },
       {
-        "name": "created_at",
         "ordinal": 4,
-        "type_info": "Datetime"
+        "name": "created_at",
+        "type_info": "Timestamptz"
       },
       {
-        "name": "updated_at",
         "ordinal": 5,
-        "type_info": "Datetime"
+        "name": "updated_at",
+        "type_info": "Timestamptz"
       }
     ],
     "parameters": {
-      "Right": 0
+      "Left": []
     },
     "nullable": [
-      true,
       false,
       false,
       false,
-      true,
-      true
+      false,
+      false,
+      false
     ]
   },
   "hash": "1b6f644dea324039004434334415255a85a32d05a5b2af5412c118d286c647e5"
