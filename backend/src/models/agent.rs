@@ -9,9 +9,12 @@ use uuid::Uuid;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AgentDefinition {
     pub name: String,
+    pub display_name: String,
     pub description: String,
     pub model: Option<String>,
     pub tools: Option<Vec<String>>,
+    pub category: Option<String>,
+    pub tags: Option<Vec<String>>,
     pub content: String, // The markdown content after frontmatter
 }
 
@@ -21,6 +24,13 @@ pub struct AgentStats {
     pub downloads: u64,
     pub upvotes: u64,
     pub votes: u64,
+}
+
+/// Agent metadata stored in the database
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AgentMetadata {
+    pub category: String,
+    pub tags: Vec<String>,
 }
 
 /// Database model for agents
@@ -42,10 +52,12 @@ pub struct AgentDb {
 pub struct Agent {
     pub id: String, // This will be the public_id
     pub name: String,
+    pub display_name: String,
     pub description: String,
     pub model: Option<String>,
     pub tools: Option<Vec<String>>,
     pub stats: AgentStats,
+    pub metadata: AgentMetadata,
     pub content: String, // The markdown content from the agent definition file
     pub last_updated: Option<String>, // ISO 8601 timestamp from database updated_at
 }
@@ -60,6 +72,12 @@ impl AgentDb {
     pub fn to_api_model(self, definition: &AgentDefinition) -> Agent {
         let stats: AgentStats = serde_json::from_value(self.stats)
             .unwrap_or_default();
+        
+        // Create metadata from definition
+        let metadata = AgentMetadata {
+            category: definition.category.clone().unwrap_or_else(|| "general".to_string()),
+            tags: definition.tags.clone().unwrap_or_default(),
+        };
 
         // Format updated_at as ISO 8601 string
         let last_updated = Some(self.updated_at.to_string());
@@ -67,10 +85,12 @@ impl AgentDb {
         Agent {
             id: self.public_id,
             name: self.name,
+            display_name: definition.display_name.clone(),
             description: definition.description.clone(),
             model: definition.model.clone(),
             tools: definition.tools.clone(),
             stats,
+            metadata,
             content: definition.content.clone(),
             last_updated,
         }

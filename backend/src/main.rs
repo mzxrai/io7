@@ -68,11 +68,30 @@ async fn main() -> Result<()> {
     // Initialize sample data if needed
     db::init_sample_data(&pool).await?;
     
-    // Create app state
+    // Sync agents from files to database
+    db::sync_agents_to_db(&pool, &agent_cache).await?;
+    
+    // Create app state with empty cache
     let state = AppState {
         pool,
         agent_cache,
+        agents_combined: Arc::new(tokio::sync::RwLock::new(Vec::new())),
     };
+    
+    // Initial cache population
+    handlers::agents::refresh_agents_cache(&state).await?;
+    
+    // Spawn background task to refresh cache every 60 seconds
+    let state_clone = state.clone();
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(std::time::Duration::from_secs(60));
+        loop {
+            interval.tick().await;
+            if let Err(e) = handlers::agents::refresh_agents_cache(&state_clone).await {
+                tracing::error!("Failed to refresh agents cache: {}", e);
+            }
+        }
+    });
     
     // Build router
     let app = Router::new()

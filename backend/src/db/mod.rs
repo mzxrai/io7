@@ -1,7 +1,11 @@
+mod sync;
+
 use anyhow::Result;
 use sqlx::{PgPool, postgres::PgPoolOptions};
 use std::time::Duration;
 use tracing::info;
+
+pub use sync::sync_agents_to_db;
 
 pub async fn create_pool(database_url: &str) -> Result<PgPool> {
     let pool = PgPoolOptions::new()
@@ -39,18 +43,24 @@ pub async fn init_sample_data(pool: &PgPool) -> Result<()> {
         
         // Insert sample agents
         let agents = vec![
-            ("security-advisor", json!({
-                "downloads": 12500,
-                "upvotes": 92,
-                "votes": 234,
-                "last_updated": "2d ago"
-            })),
-            ("code-optimizer", json!({
-                "downloads": 8700,
-                "upvotes": 88,
-                "votes": 189,
-                "last_updated": "1w ago"
-            })),
+            (
+                "security-advisor",
+                json!({
+                    "downloads": 12500,
+                    "upvotes": 92,
+                    "votes": 234,
+                    "last_updated": "2d ago"
+                })
+            ),
+            (
+                "code-optimizer",
+                json!({
+                    "downloads": 8700,
+                    "upvotes": 88,
+                    "votes": 189,
+                    "last_updated": "1w ago"
+                })
+            ),
         ];
         
         for (name, stats) in agents {
