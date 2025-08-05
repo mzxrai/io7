@@ -32,25 +32,16 @@ COPY agent_files/ /app/agent_files/
 # Copy migrations
 COPY migrations/ /app/migrations/
 
-# Create data directory for volume mount
-RUN mkdir -p /data
-
 # Set environment variables for production
 ENV DATABASE_URL=sqlite:/data/app.db
 ENV RUST_LOG=info
 ENV PORT=8080
 
-# Create entrypoint script - migrations are handled by the Rust app
-RUN echo '#!/bin/bash\n\
-set -e\n\
-echo "Checking database directory..."\n\
-# Ensure data directory exists and is writable\n\
-mkdir -p /data\n\
-chmod 755 /data\n\
-echo "Starting application (migrations will run automatically)..."\n\
-exec ./io7-backend' > /app/entrypoint.sh && \
-chmod +x /app/entrypoint.sh
+# Create entrypoint script to ensure /data exists and is writable
+RUN echo '#!/bin/sh\nset -e\nmkdir -p /data\nchmod 755 /data\nexec "$@"' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 EXPOSE 8080
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["./io7-backend"]
