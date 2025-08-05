@@ -76,8 +76,8 @@ describe('AgentList', () => {
       const firstCard = el.querySelector('agent-card');
       expect(firstCard?.getAttribute('agent-id')).toBe(mockAgents[0].id);
       expect(firstCard?.getAttribute('name')).toBe(mockAgents[0].display_name);
-      expect(firstCard?.getAttribute('category')).toBe(mockAgents[0].metadata.category);
-      expect(firstCard?.getAttribute('tags')).toBe(mockAgents[0].metadata.tags.join(','));
+      expect(firstCard?.getAttribute('category')).toBe(mockAgents[0].metadata?.category || '');
+      expect(firstCard?.getAttribute('tags')).toBe(mockAgents[0].metadata?.tags?.join(',') || '');
     });
   });
 

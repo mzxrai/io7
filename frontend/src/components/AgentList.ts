@@ -60,12 +60,12 @@ export class AgentList extends HTMLElement {
     const agentCards = agents.map(agent => `
       <agent-card
         agent-id="${agent.id}"
-        name="${agent.display_name}"
-        category="${agent.metadata.category}"
+        name="${agent.display_name || agent.name}"
+        category="${agent.metadata?.category || ''}"
         description="${agent.description}"
         downloads="${agent.stats.downloads || 0}"
         votes="${agent.stats.votes || 0}"
-        tags="${agent.metadata.tags.join(',')}"
+        tags="${agent.metadata?.tags?.join(',') || ''}"
         ${agent.isPopular ? 'is-popular="true"' : ''}
       ></agent-card>
     `).join('');

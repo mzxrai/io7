@@ -76,14 +76,6 @@
   user-select: none;
 }
 
-.category {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-  user-select: none;
-}
-
 .description {
   color: var(--color-text-subtle);
   font-size: var(--text-base);

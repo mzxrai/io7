@@ -76,22 +76,11 @@ async fn main() -> Result<()> {
         pool,
         agent_cache,
         agents_combined: Arc::new(tokio::sync::RwLock::new(Vec::new())),
+        last_updated_at: Arc::new(tokio::sync::RwLock::new(None)),
     };
     
-    // Initial cache population
-    handlers::agents::refresh_agents_cache(&state).await?;
-    
-    // Spawn background task to refresh cache every 60 seconds
-    let state_clone = state.clone();
-    tokio::spawn(async move {
-        let mut interval = tokio::time::interval(std::time::Duration::from_secs(60));
-        loop {
-            interval.tick().await;
-            if let Err(e) = handlers::agents::refresh_agents_cache(&state_clone).await {
-                tracing::error!("Failed to refresh agents cache: {}", e);
-            }
-        }
-    });
+    // Skip initial cache population and background task for Cloud Run
+    // The cache will be populated on first request instead
     
     // Build router
     let app = Router::new()
@@ -120,11 +109,7 @@ async fn main() -> Result<()> {
     
     // Start server
     let listener = tokio::net::TcpListener::bind(addr).await?;
-    
-    if let Err(e) = axum::serve(listener, app).await {
-        tracing::error!("Server error: {}", e);
-        return Err(e.into());
-    }
+    axum::serve(listener, app).await?;
     
     Ok(())
 }

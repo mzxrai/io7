@@ -165,7 +165,6 @@ export class AgentCard extends HTMLElement {
   private render(): void {
     const agentId = this.getAttribute('agent-id') || '';
     const name = this.getAttribute('name') || '';
-    const category = this.getAttribute('category') || '';
     const description = this.getAttribute('description') || '';
     const packageName = this.getAttribute('package') || '';
     const isPopular = this.getAttribute('is-popular') === 'true';
@@ -203,7 +202,6 @@ export class AgentCard extends HTMLElement {
               ${name}
               ${popularBadge}
             </div>
-            <div class="${styles.category}">${category}</div>
           </div>
         </div>
         <div class="${styles.description}">${description}</div>

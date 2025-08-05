@@ -4,6 +4,7 @@ use axum::{
     response::IntoResponse,
 };
 use sqlx::PgPool;
+use sqlx::types::time::OffsetDateTime;
 use std::sync::Arc;
 
 use crate::models::agent::{AgentCache, AgentDb};
@@ -13,6 +14,7 @@ pub struct AppState {
     pub pool: PgPool,
     pub agent_cache: Arc<AgentCache>,
     pub agents_combined: Arc<tokio::sync::RwLock<Vec<crate::models::agent::Agent>>>,
+    pub last_updated_at: Arc<tokio::sync::RwLock<Option<OffsetDateTime>>>,
 }
 
 /// Refresh the combined agents cache
@@ -48,7 +50,46 @@ pub async fn refresh_agents_cache(state: &AppState) -> Result<(), anyhow::Error>
 pub async fn agents_handler(
     State(state): State<AppState>,
 ) -> impl IntoResponse {
-    // Just read from the cache
+    // Check if we need to refresh the cache
+    let should_refresh = {
+        let last_updated = state.last_updated_at.read().await;
+        
+        if last_updated.is_none() {
+            // Never refreshed before
+            true
+        } else {
+            // Check if any agent has been updated since last refresh
+            match sqlx::query!(
+                "SELECT MAX(updated_at) as max_updated FROM agents"
+            )
+            .fetch_one(&state.pool)
+            .await
+            {
+                Ok(result) => {
+                    if let (Some(max_updated), Some(last)) = (result.max_updated, *last_updated) {
+                        max_updated > last
+                    } else {
+                        true
+                    }
+                }
+                Err(e) => {
+                    tracing::error!("Failed to check for updates: {}", e);
+                    false
+                }
+            }
+        }
+    };
+    
+    if should_refresh {
+        if let Err(e) = refresh_agents_cache(&state).await {
+            tracing::error!("Failed to refresh agents cache: {}", e);
+        } else {
+            // Update the last refresh timestamp
+            *state.last_updated_at.write().await = Some(OffsetDateTime::now_utc());
+        }
+    }
+    
+    // Read from the cache
     let agents = state.agents_combined.read().await;
     Json(agents.clone())
 }

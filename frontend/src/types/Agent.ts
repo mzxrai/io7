@@ -1,7 +1,7 @@
 export interface Agent {
   id: string;
   name: string;
-  display_name: string;
+  display_name?: string;
   description: string;
   model?: string;
   tools?: string[];
@@ -10,7 +10,7 @@ export interface Agent {
     upvotes: number;
     votes: number;
   };
-  metadata: {
+  metadata?: {
     category: string;
     tags: string[];
   };

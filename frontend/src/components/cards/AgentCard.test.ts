@@ -30,7 +30,6 @@ describe('AgentCard', () => {
 
       // Find elements by their content
       expect(el.textContent).toContain('Conversion Optimizer');
-      expect(el.textContent).toContain('Marketing');
       expect(el.textContent).toContain('AI-powered conversion rate optimization');
     });
 
