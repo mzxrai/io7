@@ -4,8 +4,12 @@ export const mockAgents: Agent[] = [
   {
     id: 'optimize',
     name: 'conversion-optimizer',
+    display_name: 'Conversion Optimizer',
     description: 'AI-powered conversion rate optimization. Analyzes your site\'s UX patterns, suggests A/B tests, and provides industry-specific optimization strategies based on your ICP.',
-    icon: '📈',
+    metadata: {
+      category: 'Marketing',
+      tags: ['optimization', 'conversion', 'analytics'],
+    },
     stats: {
       downloads: 12400,
       upvotes: 92,
@@ -18,8 +22,12 @@ export const mockAgents: Agent[] = [
   {
     id: 'security',
     name: 'security-auditor',
+    display_name: 'Security Auditor',
     description: 'Continuous security scanning and vulnerability detection. Checks for OWASP Top 10, reviews dependencies, and suggests security hardening measures.',
-    icon: '🔒',
+    metadata: {
+      category: 'Security',
+      tags: ['security', 'vulnerability', 'audit'],
+    },
     stats: {
       downloads: 8700,
       upvotes: 95,
@@ -32,8 +40,12 @@ export const mockAgents: Agent[] = [
   {
     id: 'performance',
     name: 'performance-optimizer',
+    display_name: 'Performance Optimizer',
     description: 'Identifies performance bottlenecks, suggests optimizations for Core Web Vitals, and provides code splitting strategies tailored to your stack.',
-    icon: '⚡',
+    metadata: {
+      category: 'Performance',
+      tags: ['performance', 'optimization', 'web-vitals'],
+    },
     stats: {
       downloads: 15200,
       upvotes: 88,
@@ -46,8 +58,12 @@ export const mockAgents: Agent[] = [
   {
     id: 'testing',
     name: 'test-writer',
+    display_name: 'Test Writer',
     description: 'Generates comprehensive test suites. Creates unit tests, integration tests, and E2E scenarios based on your code structure.',
-    icon: '🧪',
+    metadata: {
+      category: 'Testing',
+      tags: ['testing', 'unit-tests', 'e2e'],
+    },
     stats: {
       downloads: 85,
       upvotes: 78,

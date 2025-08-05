@@ -9,7 +9,7 @@ export class AgentCard extends HTMLElement {
   static get observedAttributes(): string[] {
     return [
       'agent-id', 'name', 'category', 'description', 'package',
-      'is-popular', 'downloads', 'upvotes', 'votes', 'last-updated',
+      'is-popular', 'downloads', 'upvotes', 'votes', 'last-updated', 'tags',
     ];
   }
 
@@ -169,6 +169,8 @@ export class AgentCard extends HTMLElement {
     const description = this.getAttribute('description') || '';
     const packageName = this.getAttribute('package') || '';
     const isPopular = this.getAttribute('is-popular') === 'true';
+    const tagsAttr = this.getAttribute('tags') || '';
+    const tags = tagsAttr ? tagsAttr.split(',') : [];
 
     // Stats attributes
     const downloads = this.getAttribute('downloads') || '';
@@ -179,6 +181,10 @@ export class AgentCard extends HTMLElement {
     const popularBadge = isPopular
       ? '<agent-badge text="Popular" variant="popular"></agent-badge>'
       : '';
+
+    const tagBadges = tags.map(tag =>
+      `<agent-badge text="${tag.trim()}" variant="default"></agent-badge>`,
+    ).join('');
 
     // Apply host styles
     this.className = `${styles.host} ${this.classList.contains('selected') ? 'selected' : ''}`;
@@ -201,6 +207,7 @@ export class AgentCard extends HTMLElement {
           </div>
         </div>
         <div class="${styles.description}">${description}</div>
+        ${tags.length > 0 ? `<div class="${styles.tags}">${tagBadges}</div>` : ''}
         <agent-stats
           downloads="${downloads}"
           upvotes="${upvotes}"

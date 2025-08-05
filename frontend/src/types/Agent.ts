@@ -1,6 +1,7 @@
 export interface Agent {
   id: string;
   name: string;
+  display_name: string;
   description: string;
   model?: string;
   tools?: string[];
@@ -9,10 +10,13 @@ export interface Agent {
     upvotes: number;
     votes: number;
   };
+  metadata: {
+    category: string;
+    tags: string[];
+  };
   content: string;
   last_updated?: string;
   // Frontend-specific fields (computed/derived)
-  icon?: string;
   isPopular?: boolean;
 }
 

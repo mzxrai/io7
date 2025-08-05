@@ -90,37 +90,12 @@ export class ApiService {
     return {
       ...agent,
       // Add frontend-specific computed fields
-      icon: this.getAgentIcon(agent.name),
       isPopular: agent.stats.downloads > 10000 || agent.stats.upvotes > 90,
     };
   }
 
   private enrichAgentsWithFrontendData(agents: Agent[]): Agent[] {
     return agents.map(agent => this.enrichAgentWithFrontendData(agent));
-  }
-
-
-  private getAgentIcon(name: string): string {
-    const iconMap: Record<string, string> = {
-      'security': '🔒',
-      'performance': '⚡',
-      'optimization': '📈',
-      'database': '🗄️',
-      'accessibility': '♿',
-      'test': '🧪',
-      'documentation': '📚',
-      'api': '🔌',
-      'code': '💻',
-    };
-
-    const lowerName = name.toLowerCase();
-    for (const [keyword, icon] of Object.entries(iconMap)) {
-      if (lowerName.includes(keyword)) {
-        return icon;
-      }
-    }
-
-    return '🤖'; // Default icon
   }
 }
 
