@@ -11,7 +11,8 @@ pub async fn create_pool(database_url: &str) -> Result<PgPool> {
     let pool = PgPoolOptions::new()
         .max_connections(5)
         .acquire_timeout(Duration::from_secs(10))  // Increase timeout to 10 seconds
-        .connect_lazy(database_url)?;  // Use lazy connection for Cloud Run
+        .connect(database_url)
+        .await?;
     
     info!("Connected to database: {}", database_url);
     Ok(pool)
