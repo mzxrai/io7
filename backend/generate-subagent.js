@@ -41,8 +41,8 @@ async function callAI(model, prompt, outputDir) {
     });
     
     try {
-      console.error(`Calling Claude via SDK...`);
-      const message = await anthropic.messages.create({
+      console.error(`Calling Claude via SDK with thinking...`);
+      const message = await anthropic.beta.messages.create({
         model: "claude-opus-4-1-20250805",
         max_tokens: 4096,
         messages: [{ role: "user", content: prompt }],
@@ -50,7 +50,15 @@ async function callAI(model, prompt, outputDir) {
           type: "web_search_20250305",
           name: "web_search",
           max_uses: 10
-        }]
+        }],
+        thinking: {
+          type: "enabled",
+          budget_tokens: 16000
+        }
+      }, {
+        headers: {
+          'anthropic-beta': 'interleaved-thinking-2025-05-14'
+        }
       });
       
       // Extract text from response, handling different content structures
@@ -80,10 +88,13 @@ async function callAI(model, prompt, outputDir) {
     });
     
     try {
-      console.error(`Calling OpenAI via SDK...`);
+      console.error(`Calling OpenAI via SDK with reasoning...`);
       const completion = await openai.responses.create({
         model: "o4-mini-2025-04-16",
         input: prompt,
+        reasoning: {
+          effort: "high"
+        },
         tools: [{ 
           type: "web_search_preview" 
         }],
@@ -103,7 +114,7 @@ async function callAI(model, prompt, outputDir) {
     const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY);
     
     try {
-      console.error(`Calling Gemini via SDK...`);
+      console.error(`Calling Gemini via SDK with thinking...`);
       const response = await genAI.models.generateContent({
         model: 'gemini-2.5-pro',
         contents: prompt,
@@ -111,7 +122,10 @@ async function callAI(model, prompt, outputDir) {
           maxOutputTokens: 4096,
           tools: [{
             googleSearch: {}
-          }]
+          }],
+          thinkingConfig: {
+            thinkingBudget: 16000  // 16k tokens for thinking
+          }
         }
       });
       
@@ -158,13 +172,32 @@ ${rawResponse}`;
       apiKey: process.env.ANTHROPIC_API_KEY,
     });
     
-    const message = await anthropic.messages.create({
+    const message = await anthropic.beta.messages.create({
       model: "claude-opus-4-1-20250805",
       max_tokens: 4096,
       messages: [{ role: "user", content: extractPrompt }],
+      thinking: {
+        type: "enabled",
+        budget_tokens: 4000
+      }
+    }, {
+      headers: {
+        'anthropic-beta': 'interleaved-thinking-2025-05-14'
+      }
     });
     
-    const parsed = message.content[0].text;
+    // Extract text from response, handling different content structures
+    let parsed = '';
+    if (message.content && Array.isArray(message.content)) {
+      for (const item of message.content) {
+        if (item.type === 'text' && item.text) {
+          parsed += item.text;
+        }
+      }
+    }
+    if (!parsed && message.content && typeof message.content === 'string') {
+      parsed = message.content;
+    }
     const parsedFile = path.join(outputDir, `${model}-parsed.md`);
     await fs.writeFile(parsedFile, parsed, 'utf-8');
     
@@ -220,13 +253,32 @@ Think hard about each definition's effectiveness at guiding the AI to accomplish
   });
   
   try {
-    const message = await anthropic.messages.create({
+    const message = await anthropic.beta.messages.create({
       model: "claude-opus-4-1-20250805",
       max_tokens: 2048,
       messages: [{ role: "user", content: deciderPrompt }],
+      thinking: {
+        type: "enabled",
+        budget_tokens: 8000
+      }
+    }, {
+      headers: {
+        'anthropic-beta': 'interleaved-thinking-2025-05-14'
+      }
     });
     
-    const responseText = message.content[0].text;
+    // Extract text from response, handling different content structures
+    let responseText = '';
+    if (message.content && Array.isArray(message.content)) {
+      for (const item of message.content) {
+        if (item.type === 'text' && item.text) {
+          responseText += item.text;
+        }
+      }
+    }
+    if (!responseText && message.content && typeof message.content === 'string') {
+      responseText = message.content;
+    }
     
     // Extract JSON from the response
     const jsonMatch = responseText.match(/\{[\s\S]*\}/);
