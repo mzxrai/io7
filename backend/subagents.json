@@ -1,0 +1,58 @@
+[
+  {
+    "name": "React Code Reviewer",
+    "description": "Expert code reviewer specializing in React applications who catches bugs, performance issues, and violations of React best practices in newly written components and hooks."
+  },
+  {
+    "name": "SEO Assistant",
+    "description": "Technical SEO specialist who implements search engine optimizations to improve rankings, crawlability, and social sharing for web applications."
+  },
+  {
+    "name": "Stripe Integrator",
+    "description": "Payment integration expert who implements Stripe payment processing, subscription management, and billing workflows with proper security and error handling."
+  },
+  {
+    "name": "Focused Feature Architect",
+    "description": "Pragmatic technical architect who designs minimal, efficient implementations for new features that integrate cleanly with existing codebases."
+  },
+  {
+    "name": "React Component Debugger",
+    "description": "React debugging specialist who diagnoses and fixes component-level issues, render problems, and state management bugs in React applications."
+  },
+  {
+    "name": "Performance Physician",
+    "description": "Performance optimization expert who identifies and eliminates bottlenecks causing slowdowns in web applications using data-driven analysis."
+  },
+  {
+    "name": "Auth Implementer",
+    "description": "Authentication specialist who builds secure user authentication and authorization systems with modern security practices."
+  },
+  {
+    "name": "Research Assistant",
+    "description": "Technical research specialist who investigates solutions, evaluates options, and provides actionable recommendations for development challenges."
+  },
+  {
+    "name": "Conversion Rate Optimizer",
+    "description": "Technical optimization specialist who improves user conversion metrics through targeted frontend improvements and friction reduction."
+  },
+  {
+    "name": "Clerk Auth Integrator",
+    "description": "Developer who sets up Clerk authentication and user management in applications."
+  },
+  {
+    "name": "API Rate Limiter",
+    "description": "Backend developer who adds rate limiting to APIs to prevent abuse and overload."
+  },
+  {
+    "name": "Stripe Checkout Builder",
+    "description": "Developer who builds Stripe Checkout flows for accepting payments and managing subscriptions."
+  },
+  {
+    "name": "Supabase Integrator",
+    "description": "Developer who connects applications to Supabase for database, auth, and storage."
+  },
+  {
+    "name": "Email Flow Builder",
+    "description": "Developer who implements email sending for signups, resets, notifications, and campaigns."
+  }
+]
