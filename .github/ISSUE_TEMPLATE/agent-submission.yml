@@ -1,19 +1,19 @@
 name: Agent Idea
 description: Suggest an agent you'd like to see in io7
-title: "[Agent Idea] "
-labels: ["agent-idea"]
+title: "[Request Subagent] "
+labels: ["request-subagent"]
 body:
   - type: markdown
     attributes:
       value: |
-        ## 💡 Suggest an Agent
+        ## Suggest a Subagent
         
         Have an idea for an agent that would be useful? Let us know!
         
   - type: textarea
     id: agent-idea
     attributes:
-      label: Agent Idea
+      label: Subagent Idea
       description: Describe the agent you'd like to see. Be as detailed or brief as you want!
       placeholder: |
         I'd love an agent that could help with database migrations. It could analyze the current schema, suggest migration strategies, and write the migration scripts...

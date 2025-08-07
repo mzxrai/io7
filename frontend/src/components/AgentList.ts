@@ -1,5 +1,6 @@
 import { apiService } from '../services/api';
 import { agentStore } from '../store/agents';
+import { selectionStore } from '../store/selection';
 import type { Agent } from '../types/Agent';
 import './cards/AgentCard';
 import styles from './AgentList.module.css';
@@ -11,6 +12,20 @@ export class AgentList extends HTMLElement {
   async connectedCallback(): Promise<void> {
     await this.loadAgents();
     this.render();
+    
+    // Listen to selection changes to update button text
+    selectionStore.addEventListener('change', () => {
+      this.updateSelectAllButton();
+    });
+  }
+  
+  private updateSelectAllButton(): void {
+    const selectAllBtn = this.querySelector('#select-all-btn') as HTMLButtonElement;
+    if (selectAllBtn) {
+      const agents = agentStore.getAgents();
+      const allSelected = agents.length > 0 && agents.every(agent => selectionStore.isSelected(agent.id));
+      selectAllBtn.textContent = allSelected ? 'Deselect All' : 'Select All';
+    }
   }
 
   private async loadAgents(): Promise<void> {
@@ -89,15 +104,50 @@ export class AgentList extends HTMLElement {
       }
     }
 
+    // Only show Select All button when agents are loaded successfully
+    const agents = agentStore.getAgents();
+    const showSelectAll = !this.isLoading && !this.error && agents.length > 0;
+    const allSelected = showSelectAll && agents.every(agent => selectionStore.isSelected(agent.id));
+
     this.innerHTML = `
       <div class="${styles.listWrapper}">
         <div class="${styles.listHeader}">
           <h2 class="${styles.listTitle}">Available Subagents</h2>
+          ${showSelectAll ? `
+            <button class="${styles.selectAllButton}" id="select-all-btn">
+              ${allSelected ? 'Deselect All' : 'Select All'}
+            </button>
+          ` : ''}
         </div>
         ${content}
       </div>
     `;
+
+    // Add event listener for Select All button
+    if (showSelectAll) {
+      const selectAllBtn = this.querySelector('#select-all-btn');
+      if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', this.handleSelectAll);
+      }
+    }
   }
+
+  private handleSelectAll = (): void => {
+    const agents = agentStore.getAgents();
+    const allSelected = agents.every(agent => selectionStore.isSelected(agent.id));
+    
+    if (allSelected) {
+      // Deselect all
+      agents.forEach(agent => {
+        selectionStore.deselect(agent.id);
+      });
+    } else {
+      // Select all
+      agents.forEach(agent => {
+        selectionStore.select(agent.id);
+      });
+    }
+  };
 
   public async retry(): Promise<void> {
     await this.loadAgents();
