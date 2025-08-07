@@ -145,11 +145,8 @@ export class VoteButtons extends HTMLElement {
         bubbles: true,
         composed: true,
       }));
-    } catch (error) {
-      // Only log errors in non-test environments
-      if (typeof process === 'undefined' || process.env?.NODE_ENV !== 'test') {
-        console.error('Failed to submit vote:', error);
-      }
+    } catch {
+      // Silent error handling - no console logging needed
       // Revert optimistic update on error
       this.updateCounts(state, this.voteState);
       this.voteState = this.voteState === state ? null : this.voteState;

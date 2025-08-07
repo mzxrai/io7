@@ -5,7 +5,7 @@ CLI for installing Claude Code subagents.
 ## Usage
 
 ```bash
-npx io7@latest --install architecture-planning-specialist
+npx io7@latest --install code-architect
 ```
 
 ## What are subagents?
@@ -16,13 +16,13 @@ Subagents are specialized assistants that Claude Code can delegate tasks to. Eac
 
 ```bash
 # Install one agent
-npx io7@latest --install architecture-planning-specialist
+npx io7@latest --install code-architect
 
 # Install multiple
-npx io7@latest --install clerk-authentication-specialist,stripe-payment-specialist
+npx io7@latest --install clerk-auth-implementation-engineer,stripe-integrator
 
 # Install to current project
-npx io7@latest --install react-debugging-specialist --local
+npx io7@latest --install react-debugger --local
 ```
 
 ## Options
@@ -37,7 +37,7 @@ Visit [io7.dev](https://io7.dev) to browse available agents.
 
 ## Submit an agent
 
-Have an idea for a new subagent? [Submit your request](https://github.com/mzxrai/io7/issues/new?template=agent-submission.yml)
+Have an idea for a new subagent? [Submit your idea](https://github.com/mzxrai/io7/issues/new?template=agent-submission.yml)
 
 ## License
 

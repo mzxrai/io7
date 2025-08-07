@@ -1,5 +1,5 @@
 ---
-name: react-debugging-specialist
+name: react-debugger
 display_name: React Debugger
 description: |
   Call when user reports React component bugs or errors. Pass component name/path, bug description, and error messages. Returns root cause analysis and applied fix.

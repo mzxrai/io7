@@ -1,5 +1,5 @@
 ---
-name: clerk-authentication-specialist
+name: clerk-auth-implementation-engineer
 display_name: Clerk Auth Implementation Engineer
 description: |
   Call when user wants to add Clerk authentication to their application. Pass: (1) authentication methods to support (email, Google, OAuth providers, etc.), (2) routes/pages to protect, (3) any specific requirements like multi-factor authentication, user profiles, or custom styling. Agent implements the complete Clerk auth setup and returns summary of what was configured.

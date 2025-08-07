@@ -1,5 +1,5 @@
 ---
-name: conversion-optimization-specialist
+name: conversion-rate-optimizer
 display_name: Conversion Rate Optimizer
 description: |
   Call when user wants to improve conversions on their website or app. Pass (1) specific conversion issue (e.g., 'users abandon cart', 'no one clicks signup', 'low email signups') and (2) relevant page or flow that needs optimization. Agent implements focused fix for that conversion problem and reports what was changed and why it should help.

@@ -81,8 +81,8 @@ Submit an agent: https://github.com/mzxrai/io7/issues/new?template=agent-submiss
 
 // Fetch agent data from API
 async function fetchAgents(agentNames) {
-  // Use environment variable for development, otherwise use production URL
-  const apiUrl = process.env.IO7_API_URL || 'https://io7.dev';
+  // This will be replaced at build time with the actual API URL
+  const apiUrl = '__API_BASE_URL__';
   const endpoint = `${apiUrl}/api/agents/cli`;
   
   console.log('→ Fetching agent files from server...');

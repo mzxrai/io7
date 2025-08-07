@@ -1,5 +1,5 @@
 ---
-name: supabase-integration-specialist
+name: supabase-integrator
 display_name: Supabase Integrator
 description: |
   Call when user needs Supabase features. Pass (1) specific feature needed (database, auth, storage, realtime), (2) what they want to build with it, (3) any existing Supabase configuration. Agent implements that specific integration.

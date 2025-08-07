@@ -7,7 +7,7 @@ const { promisify } = require('util');
 const execAsync = promisify(exec);
 
 async function readPromptTemplate() {
-  const promptPath = path.join(__dirname, 'agent_files', 'prompt.md');
+  const promptPath = path.join(__dirname, 'prompt.md');
   const template = await fs.readFile(promptPath, 'utf-8');
   return template;
 }

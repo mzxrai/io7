@@ -37,7 +37,7 @@ Visit [io7.dev](https://io7.dev) to browse available agents.
 
 ## Submit an agent
 
-Have an idea for a new subagent? [Submit your request](https://github.com/mzxrai/io7/issues/new?template=agent-submission.yml)
+Have an idea for a new subagent? [Submit your idea](https://github.com/mzxrai/io7/issues/new?template=agent-submission.yml)
 
 ## License
 

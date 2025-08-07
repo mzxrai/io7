@@ -1,5 +1,5 @@
 ---
-name: technical-research-specialist
+name: research-assistant
 display_name: Research Assistant
 description: |
   Call when user needs information about a technology, library, or solution. Pass: (1) specific research question, (2) context about why they need this information, (3) any constraints (e.g., 'must work with React 18'). Agent researches and returns detailed findings.

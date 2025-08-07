@@ -24,7 +24,7 @@ describe('AgentStats', () => {
 
       // Download count of 25 or less should not be displayed
       expect(el.textContent).not.toContain('25');
-      
+
       const el2 = await fixture<HTMLElement>(`
         <agent-stats downloads="10"></agent-stats>
       `);
@@ -39,7 +39,7 @@ describe('AgentStats', () => {
       // Vote buttons functionality is present (can interact with voting)
       const listener = vi.fn();
       el.addEventListener('vote-changed', listener);
-      
+
       // Component should have voting capability when agent-id is present
       expect(el.getAttribute('agent-id')).toBe('test-agent');
     });

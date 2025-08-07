@@ -1,5 +1,5 @@
 ---
-name: react-code-review-specialist
+name: react-code-reviewer
 display_name: React Code Reviewer
 description: |
   Call after React components or hooks have been created or modified. Pass the list of changed files or specific components to review. Agent checks for bugs, performance issues, and React anti-patterns in those files. Returns critical issues found or confirms code is production-ready.

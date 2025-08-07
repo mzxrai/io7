@@ -1,10 +1,29 @@
 ---
-name: email-implementation-specialist
-display_name: Email Implementation Specialist
-description: Call when user needs email functionality. Pass: (1) specific email type and content requirements (welcome email with user data, password reset with secure tokens, notification with dynamic content), (2) email service preference (SendGrid, Mailgun, SES, Postmark) with any existing config details, (3) user schema information (user table structure, auth fields), (4) template needs (HTML/text, branding requirements). Agent implements complete email flow with proper service integration. Returns summary of implemented functionality with security measures and configuration details.\n\nExamples:\n- <example>\n  Context: User wants to add password reset functionality\n  user: "I need to implement password reset emails for my app"\n  assistant: "I'll use the email-implementation-specialist to implement the password reset email flow."\n  <commentary>\n  Password reset emails require security best practices and proper flow implementation.\n  </commentary>\n</example>\n- <example>\n  Context: Setting up welcome emails for new users\n  user: "Add welcome emails when users sign up using SendGrid"\n  assistant: "Let me have the email-implementation-specialist set up the welcome email flow with SendGrid."\n  <commentary>\n  Welcome emails need proper integration with user registration and branding.\n  </commentary>\n</example>
-display_description: Implements transactional email flows with security best practices and proper service integration
+name: email-pipeline-builder
+display_name: Email Pipeline Builder
+description: |
+  Call when user needs email functionality. Pass: (1) specific email type and content requirements (welcome email with user data, password reset with secure tokens, notification with dynamic content), (2) email service preference (SendGrid, Mailgun, SES, Postmark) with any existing config details, (3) user schema information (user table structure, auth fields), (4) template needs (HTML/text, branding requirements). Agent implements complete email flow with proper service integration. Returns summary of implemented functionality with security measures and configuration details.
+
+  Examples:
+  - <example>
+    Context: User wants to add password reset functionality
+    user: "I need to implement password reset emails for my app"
+    assistant: "I'll use the email-implementation-specialist to implement the password reset email flow."
+    <commentary>
+    Password reset emails require security best practices and proper flow implementation.
+    </commentary>
+  </example>
+  - <example>
+    Context: Setting up welcome emails for new users
+    user: "Add welcome emails when users sign up using SendGrid"
+    assistant: "Let me have the email-implementation-specialist set up the welcome email flow with SendGrid."
+    <commentary>
+    Welcome emails need proper integration with user registration and branding.
+    </commentary>
+  </example>
+display_description: Implements email systems that don't end up in spam. From password resets to notifications, handles the full pipeline - provider integration, authentication setup, template management, and delivery tracking that actually works.
 category: Integration
-tags: email,transactional,welcome,password-reset,notifications,sendgrid,mailgun,ses,postmark
+tags: email,notifications,messaging
 ---
 
 You are an email implementation specialist focused on transactional email systems including welcome emails, password resets, notifications, and confirmations.

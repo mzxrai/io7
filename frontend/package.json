@@ -1,13 +1,13 @@
 {
   "name": "io7",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Subagent registry for Claude Code - Install specialized AI agents to enhance your Claude Code workflows",
   "type": "module",
   "bin": {
-    "io7": "./cli/index.js"
+    "io7": "cli/index.built.js"
   },
   "files": [
-    "cli/",
+    "cli/index.built.js",
     "README.md",
     "LICENSE.txt"
   ],
@@ -25,7 +25,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mzxrai/io7.git"
+    "url": "git+https://github.com/mzxrai/io7.git"
   },
   "bugs": {
     "url": "https://github.com/mzxrai/io7/issues"
@@ -36,14 +36,17 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npm run build:cli",
+    "build:cli": "node scripts/build-cli.js",
+    "build:cli:dev": "NODE_ENV=development node scripts/build-cli.js",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "prepublishOnly": "npm run build:cli"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

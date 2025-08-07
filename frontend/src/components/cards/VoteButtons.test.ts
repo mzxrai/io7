@@ -35,7 +35,7 @@ describe('VoteButtons', () => {
       // User can vote when agent-id is present
       const upvoteBtn = el.querySelector('button[aria-label="Upvote"]') as HTMLButtonElement;
       upvoteBtn.click();
-      
+
       await vi.waitFor(() => {
         expect(apiService.voteForAgent).toHaveBeenCalled();
       });
@@ -54,7 +54,7 @@ describe('VoteButtons', () => {
       // User can still vote even when starting from zero
       const upvoteBtn = el.querySelector('button[aria-label="Upvote"]') as HTMLButtonElement;
       upvoteBtn.click();
-      
+
       await vi.waitFor(() => {
         expect(apiService.voteForAgent).toHaveBeenCalledWith('test-agent', 1);
       });
@@ -114,7 +114,7 @@ describe('VoteButtons', () => {
 
       const upvoteBtn = el.querySelector('button[aria-label="Upvote"]') as HTMLButtonElement;
       const downvoteBtn = el.querySelector('button[aria-label="Downvote"]') as HTMLButtonElement;
-      
+
       // Upvote first
       upvoteBtn.click();
       await vi.waitFor(() => {
@@ -141,7 +141,7 @@ describe('VoteButtons', () => {
       `);
 
       const upvoteBtn = el.querySelector('button[aria-label="Upvote"]') as HTMLButtonElement;
-      
+
       // First click - upvote
       upvoteBtn.click();
       await vi.waitFor(() => {
@@ -170,7 +170,7 @@ describe('VoteButtons', () => {
       `);
 
       const upvoteBtn = el.querySelector('button[aria-label="Upvote"]') as HTMLButtonElement;
-      
+
       // Clicking it again should toggle it off
       upvoteBtn.click();
       await vi.waitFor(() => {
@@ -191,7 +191,7 @@ describe('VoteButtons', () => {
       `);
 
       const downvoteBtn = el.querySelector('button[aria-label="Downvote"]') as HTMLButtonElement;
-      
+
       // Clicking it again should toggle it off
       downvoteBtn.click();
       await vi.waitFor(() => {
@@ -263,7 +263,7 @@ describe('VoteButtons', () => {
       // Try to vote without agent-id
       el.click();
 
-      // API should not be called without agent-id 
+      // API should not be called without agent-id
       const { apiService } = await import('../../services/api');
       expect(apiService.voteForAgent).not.toHaveBeenCalled();
     });
