@@ -72,7 +72,10 @@ export class AgentStats extends HTMLElement {
     if (agentName) {
       const reportLink = document.createElement('a');
       reportLink.className = styles.reportIssue;
-      reportLink.href = 'https://github.com/mzxrai/io7/issues/new?template=agent-issue.yml';
+      // Pre-fill the agent name in the issue template
+      const encodedTitle = encodeURIComponent(`[Agent Issue] ${agentName}`);
+      const encodedName = encodeURIComponent(agentName);
+      reportLink.href = `https://github.com/mzxrai/io7/issues/new?template=agent-issue.yml&title=${encodedTitle}&agent-name=${encodedName}`;
       reportLink.target = '_blank';
       reportLink.rel = 'noopener noreferrer';
       reportLink.textContent = 'Report Issue';
