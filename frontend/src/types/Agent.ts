@@ -3,6 +3,7 @@ export interface Agent {
   name: string;
   display_name?: string;
   description: string;
+  display_description?: string;
   model?: string;
   tools?: string[];
   stats: {

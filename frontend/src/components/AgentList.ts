@@ -41,72 +41,60 @@ export class AgentList extends HTMLElement {
     // Apply host styles
     this.className = styles.host;
 
+    let content = '';
+
     if (this.isLoading) {
-      this.renderLoadingState();
-      return;
-    }
-
-    if (this.error) {
-      this.renderErrorState();
-      return;
-    }
-
-    const agents = agentStore.getAgents();
-    if (agents.length === 0) {
-      this.renderEmptyState();
-      return;
-    }
-
-    const agentCards = agents.map(agent => `
-      <agent-card
-        agent-id="${agent.id}"
-        name="${agent.display_name || agent.name}"
-        category="${agent.metadata?.category || ''}"
-        description="${agent.description}"
-        downloads="${agent.stats.downloads || 0}"
-        votes="${agent.stats.votes || 0}"
-        tags="${agent.metadata?.tags?.join(',') || ''}"
-        ${agent.isPopular ? 'is-popular="true"' : ''}
-      ></agent-card>
-    `).join('');
-
-    this.innerHTML = `
-      <div class="${styles.listWrapper}">
-        <div class="${styles.listHeader}">
-          <h2 class="${styles.listTitle}">Available Agents</h2>
-        </div>
-        <div class="${styles.agentListContainer}">
-          ${agentCards}
-        </div>
-      </div>
-    `;
-  }
-
-  private renderLoadingState(): void {
-    this.innerHTML = `
-      <div class="${styles.listWrapper}">
-        <div class="${styles.listHeader}">
-          <h2 class="${styles.listTitle}">Available Agents</h2>
-        </div>
+      content = `
         <div class="${styles.loadingState}">
           Loading agents...
         </div>
-      </div>
-    `;
-  }
-
-  private renderErrorState(): void {
-    this.innerHTML = `
-      <div class="${styles.listWrapper}">
-        <div class="${styles.listHeader}">
-          <h2 class="${styles.listTitle}">Available Agents</h2>
-        </div>
+      `;
+    } else if (this.error) {
+      content = `
         <div class="${styles.errorState}">
           <p>Failed to load agents: ${this.error}</p>
           <button class="${styles.retryButton}" onclick="this.parentElement.parentElement.parentElement.retry()">
             Retry
           </button>
         </div>
+      `;
+    } else {
+      const agents = agentStore.getAgents();
+      if (agents.length === 0) {
+        content = `
+          <div class="${styles.emptyState}">
+            No agents available
+          </div>
+        `;
+      } else {
+        const agentCards = agents.map(agent => `
+          <agent-card
+            agent-id="${agent.id}"
+            name="${agent.display_name || agent.name}"
+            category="${agent.metadata?.category || ''}"
+            description="${agent.display_description || agent.description}"
+            downloads="${agent.stats.downloads || 0}"
+            upvotes="${agent.stats.upvotes || 0}"
+            votes="${agent.stats.votes || 0}"
+            tags="${agent.metadata?.tags?.join(',') || ''}"
+            ${agent.isPopular ? 'is-popular="true"' : ''}
+          ></agent-card>
+        `).join('');
+
+        content = `
+          <div class="${styles.agentListContainer}">
+            ${agentCards}
+          </div>
+        `;
+      }
+    }
+
+    this.innerHTML = `
+      <div class="${styles.listWrapper}">
+        <div class="${styles.listHeader}">
+          <h2 class="${styles.listTitle}">Available Subagents</h2>
+        </div>
+        ${content}
       </div>
     `;
   }
@@ -114,19 +102,6 @@ export class AgentList extends HTMLElement {
   public async retry(): Promise<void> {
     await this.loadAgents();
     this.render();
-  }
-
-  private renderEmptyState(): void {
-    this.innerHTML = `
-      <div class="${styles.listWrapper}">
-        <div class="${styles.listHeader}">
-          <h2 class="${styles.listTitle}">Available Agents</h2>
-        </div>
-        <div class="${styles.emptyState}">
-          No agents available
-        </div>
-      </div>
-    `;
   }
 }
 

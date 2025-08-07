@@ -1,8 +1,39 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
+  "name": "io7",
+  "version": "1.0.0",
+  "description": "Subagent registry for Claude Code - Install specialized AI agents to enhance your Claude Code workflows",
   "type": "module",
+  "bin": {
+    "io7": "./cli/index.js"
+  },
+  "files": [
+    "cli/",
+    "README.md",
+    "LICENSE.txt"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "subagents",
+    "cli",
+    "developer-tools",
+    "automation",
+    "ai-agents"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/io7/agent-marketplace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/io7/agent-marketplace/issues"
+  },
+  "homepage": "https://io7.dev",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

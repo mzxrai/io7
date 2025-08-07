@@ -52,7 +52,7 @@ describe('AgentList', () => {
       const el = await fixture<HTMLElement>('<agent-list></agent-list>');
       (el as any).setAgents(mockAgents);
 
-      expect(el.textContent).toContain('Available Agents');
+      expect(el.textContent).toContain('Available Subagents');
     });
 
     it('should display all agent cards', async () => {

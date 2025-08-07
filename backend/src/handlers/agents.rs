@@ -2,7 +2,9 @@ use axum::{
     extract::State,
     Json,
     response::IntoResponse,
+    http::StatusCode,
 };
+use serde::Deserialize;
 use sqlx::PgPool;
 use sqlx::types::time::OffsetDateTime;
 use std::sync::Arc;
@@ -44,6 +46,12 @@ pub async fn refresh_agents_cache(state: &AppState) -> Result<(), anyhow::Error>
     
     tracing::debug!("Refreshed agents cache");
     Ok(())
+}
+
+/// Request body for the CLI agents endpoint
+#[derive(Deserialize)]
+pub struct CliAgentsRequest {
+    pub names: Vec<String>,
 }
 
 /// GET /api/agents - Return all agents with their stats
@@ -92,4 +100,75 @@ pub async fn agents_handler(
     // Read from the cache
     let agents = state.agents_combined.read().await;
     Json(agents.clone())
+}
+
+/// POST /api/agents/cli - Return specific agents by name for CLI download
+pub async fn agents_cli_handler(
+    State(state): State<AppState>,
+    Json(request): Json<CliAgentsRequest>,
+) -> impl IntoResponse {
+    // Ensure cache is populated first
+    let should_refresh = {
+        let last_updated = state.last_updated_at.read().await;
+        last_updated.is_none()
+    };
+    
+    if should_refresh {
+        if let Err(e) = refresh_agents_cache(&state).await {
+            tracing::error!("Failed to refresh agents cache: {}", e);
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(Vec::<crate::models::agent::Agent>::new())
+            );
+        } else {
+            *state.last_updated_at.write().await = Some(OffsetDateTime::now_utc());
+        }
+    }
+    
+    // Read from the cache and filter by requested names
+    let agents = state.agents_combined.read().await;
+    let filtered_agents: Vec<_> = agents
+        .iter()
+        .filter(|agent| request.names.contains(&agent.name))
+        .cloned()
+        .collect();
+    
+    // Spawn a background task to increment download stats for matched agents
+    // This won't block the HTTP response
+    if !filtered_agents.is_empty() {
+        let pool = state.pool.clone();
+        let agent_names: Vec<String> = filtered_agents.iter().map(|a| a.name.clone()).collect();
+        
+        tokio::spawn(async move {
+            // Update download stats for each agent
+            for name in agent_names {
+                let result = sqlx::query!(
+                    r#"
+                    UPDATE agents 
+                    SET stats = jsonb_set(
+                        stats,
+                        '{downloads}',
+                        to_jsonb(COALESCE((stats->>'downloads')::bigint, 0) + 1)
+                    ),
+                    updated_at = NOW()
+                    WHERE name = $1
+                    "#,
+                    name
+                )
+                .execute(&pool)
+                .await;
+                
+                match result {
+                    Ok(_) => {
+                        tracing::debug!("Incremented download count for agent: {}", name);
+                    }
+                    Err(e) => {
+                        tracing::error!("Failed to increment download count for agent {}: {}", name, e);
+                    }
+                }
+            }
+        });
+    }
+    
+    (StatusCode::OK, Json(filtered_agents))
 }

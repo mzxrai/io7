@@ -28,7 +28,7 @@ async function readStdinJSON() {
 
 async function generateSubagent(description) {
   return new Promise((resolve, reject) => {
-    const child = spawn('node', ['generate-subagent.js', description], {
+    const child = spawn('node', ['generate-subagent-cli.js', description], {
       env: process.env,
       cwd: __dirname
     });

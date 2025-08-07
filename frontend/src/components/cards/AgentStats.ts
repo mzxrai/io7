@@ -40,8 +40,8 @@ export class AgentStats extends HTMLElement {
     const container = document.createElement('div');
     container.className = styles.stats;
 
-    // Add download stat if > 100
-    if (downloads > 100 && !isNaN(downloads)) {
+    // Add download stat if > 25
+    if (!isNaN(downloads) && downloads > 25) {
       const stat = document.createElement('div');
       stat.className = styles.stat;
       stat.appendChild(createIcon('download', 14));
@@ -49,8 +49,8 @@ export class AgentStats extends HTMLElement {
       container.appendChild(stat);
     }
 
-    // Add upvote stat if votes > 100
-    if (votes > 100 && !isNaN(votes) && !isNaN(upvotes)) {
+    // Add upvote stat if votes > 25
+    if (!isNaN(votes) && !isNaN(upvotes) && votes > 25) {
       const stat = document.createElement('div');
       stat.className = styles.stat;
       stat.appendChild(createIcon('trending-up', 14));

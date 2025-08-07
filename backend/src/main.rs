@@ -5,7 +5,7 @@ mod models;
 
 use anyhow::Result;
 use axum::{
-    routing::get,
+    routing::{get, post},
     Router,
     http::{header, HeaderValue, Method, StatusCode},
     response::IntoResponse,
@@ -19,7 +19,7 @@ use tower_http::cors::CorsLayer;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::handlers::{agents_handler, agents::AppState};
+use crate::handlers::{agents_handler, agents_cli_handler, agents::AppState};
 
 async fn health_check(
     axum::extract::State(state): axum::extract::State<AppState>,
@@ -98,6 +98,7 @@ async fn main() -> Result<()> {
     // Build router
     let app = Router::new()
         .route("/api/agents", get(agents_handler))
+        .route("/api/agents/cli", post(agents_cli_handler))
         .route("/health", get(health_check))
         .layer(
             CorsLayer::new()

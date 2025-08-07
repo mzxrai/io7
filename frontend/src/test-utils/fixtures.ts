@@ -1,5 +1,26 @@
 import type { Agent } from '../types/Agent';
 
+export function createMockAgent(overrides?: Partial<Agent>): Agent {
+  return {
+    id: 'test-agent',
+    name: 'test-agent',
+    display_name: 'Test Agent',
+    description: 'Test agent description',
+    metadata: {
+      category: 'Testing',
+      tags: ['test', 'mock'],
+    },
+    stats: {
+      downloads: 1000,
+      upvotes: 90,
+      votes: 100,
+    },
+    content: '---\nname: test-agent\n---\nAgent content here',
+    last_updated: '1d ago',
+    ...overrides,
+  };
+}
+
 export const mockAgents: Agent[] = [
   {
     id: 'optimize',

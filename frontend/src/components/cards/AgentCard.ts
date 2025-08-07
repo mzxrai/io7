@@ -8,8 +8,8 @@ export class AgentCard extends HTMLElement {
 
   static get observedAttributes(): string[] {
     return [
-      'agent-id', 'name', 'category', 'description', 'package',
-      'is-popular', 'downloads', 'upvotes', 'votes', 'last-updated', 'tags',
+      'agent-id', 'name', 'category', 'description',
+      'is-popular', 'downloads', 'upvotes', 'votes', 'tags',
     ];
   }
 

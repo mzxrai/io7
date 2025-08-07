@@ -13,6 +13,7 @@ struct FrontMatter {
     name: String,
     display_name: String,
     description: String,
+    display_description: Option<String>,
     model: Option<String>,
     tools: Option<String>, // Comma-separated string
     category: Option<String>,
@@ -57,6 +58,7 @@ pub fn load_agent_definitions(dir: &Path) -> Result<AgentCache> {
                     name: document.metadata.name.clone(),
                     display_name: document.metadata.display_name,
                     description: document.metadata.description,
+                    display_description: document.metadata.display_description,
                     model: document.metadata.model,
                     tools: parse_comma_separated(document.metadata.tools),
                     category: document.metadata.category,

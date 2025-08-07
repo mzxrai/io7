@@ -1,0 +1,26 @@
+# Source files
+src/
+public/
+index.html
+
+# Development files
+*.test.ts
+*.test.js
+vite.config.ts
+vitest.config.ts
+tsconfig.json
+eslint.config.js
+CLAUDE.md
+.claude/
+
+# Build artifacts we don't need
+dist/
+node_modules/
+
+# Dev scripts
+start-*.sh
+
+# Keep only what we need:
+# - cli/ directory (the CLI code)
+# - package.json
+# - README.md (will use README.npm.md)

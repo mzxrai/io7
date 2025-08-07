@@ -14,22 +14,14 @@ export class AppHeader extends HTMLElement {
       <div class="${styles.header}">
         <div class="${styles.logoSection}">
           <span class="${styles.logo}">io7</span>
-          <span class="${styles.subtitle}">Agent Registry for Claude Code</span>
+          <span class="${styles.subtitle}">Subagent Registry for Claude Code</span>
         </div>
         <nav class="${styles.navLinks}">
-          <a href="#" class="${styles.navLink}">
+          <a href="https://github.com/mzxrai/io7/issues/new?template=agent-submission.yml" target="_blank" rel="noopener noreferrer" class="${styles.navLink}">
             <span class="${styles.navIcon}" data-icon="file-text"></span>
-            <span>Submit</span>
+            <span>Request a Subagent</span>
           </a>
-          <a href="#" class="${styles.navLink}">
-            <span class="${styles.navIcon}" data-icon="message-circle"></span>
-            <span>Discord</span>
-          </a>
-          <a href="#" class="${styles.navLink}">
-            <span class="${styles.navIcon}" data-icon="book-open"></span>
-            <span>Docs</span>
-          </a>
-          <a href="#" class="${styles.navLink}">
+          <a href="https://github.com/mzxrai/io7" target="_blank" rel="noopener noreferrer" class="${styles.navLink}">
             <span class="${styles.navIcon}" data-icon="github"></span>
             <span>GitHub</span>
           </a>
