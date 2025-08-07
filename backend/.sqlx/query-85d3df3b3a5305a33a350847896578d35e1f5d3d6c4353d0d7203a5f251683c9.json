@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                    UPDATE agents \n                    SET stats = jsonb_set(\n                        stats,\n                        '{downloads}',\n                        to_jsonb(COALESCE((stats->>'downloads')::bigint, 0) + 1)\n                    ),\n                    updated_at = NOW()\n                    WHERE name = $1\n                    ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "85d3df3b3a5305a33a350847896578d35e1f5d3d6c4353d0d7203a5f251683c9"
+}
