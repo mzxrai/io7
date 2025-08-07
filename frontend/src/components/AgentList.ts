@@ -12,13 +12,13 @@ export class AgentList extends HTMLElement {
   async connectedCallback(): Promise<void> {
     await this.loadAgents();
     this.render();
-    
+
     // Listen to selection changes to update button text
     selectionStore.addEventListener('change', () => {
       this.updateSelectAllButton();
     });
   }
-  
+
   private updateSelectAllButton(): void {
     const selectAllBtn = this.querySelector('#select-all-btn') as HTMLButtonElement;
     if (selectAllBtn) {
@@ -135,7 +135,7 @@ export class AgentList extends HTMLElement {
   private handleSelectAll = (): void => {
     const agents = agentStore.getAgents();
     const allSelected = agents.every(agent => selectionStore.isSelected(agent.id));
-    
+
     if (allSelected) {
       // Deselect all
       agents.forEach(agent => {

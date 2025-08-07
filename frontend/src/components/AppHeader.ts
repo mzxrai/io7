@@ -14,7 +14,9 @@ export class AppHeader extends HTMLElement {
       <div class="${styles.header}">
         <div class="${styles.logoSection}">
           <span class="${styles.logo}">io7</span>
-          <span class="${styles.subtitle}">Subagent Registry for Claude Code</span>
+          <span class="${styles.subtitle}">
+            Subagent Registry for Claude Code | Built by <a href="https://github.com/mzxrai" target="_blank" rel="noopener noreferrer" class="${styles.designerLink}">@mzxrai</a>
+          </span>
         </div>
         <nav class="${styles.navLinks}">
           <a href="https://github.com/mzxrai/io7/issues/new?template=agent-submission.yml" target="_blank" rel="noopener noreferrer" class="${styles.navLink}">
