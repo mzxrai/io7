@@ -12,7 +12,7 @@ export class TermsOfService extends HTMLElement {
       <div class="${styles.container}">
         <div class="${styles.content}">
           <h1 class="${styles.title}">Terms of Service</h1>
-          <p class="${styles.lastUpdated}">Last Updated: January 2025</p>
+          <p class="${styles.lastUpdated}">Last Updated: August 2025</p>
           
           <section class="${styles.section}">
             <h2 class="${styles.sectionTitle}">1. Acceptance of Terms</h2>
