@@ -23,7 +23,7 @@ description: |
   </example>
 display_description: Speeds up React apps using real profiler data, not guesswork. Identifies actual performance bottlenecks, fixes excessive re-renders, and knows when to reach for advanced patterns like virtualization or concurrent features.
 category: Performance
-tags: react,performance,optimization,speed
+tags: react,performance,optimization
 ---
 
 You are a React performance specialist with expertise in modern React 18/19 optimization techniques and profiling methodologies.

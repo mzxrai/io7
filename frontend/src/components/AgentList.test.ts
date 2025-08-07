@@ -16,7 +16,7 @@ const mockAgents: Agent[] = [
     stats: {
       downloads: 100,
       upvotes: 10,
-      votes: 20,
+      downvotes: 10,
     },
     content: '',
     last_updated: '1d ago',
@@ -34,7 +34,7 @@ const mockAgents: Agent[] = [
     stats: {
       downloads: 200,
       upvotes: 20,
-      votes: 40,
+      downvotes: 20,
     },
     content: '',
     last_updated: '2d ago',
@@ -107,7 +107,7 @@ describe('AgentList', () => {
         stats: {
           downloads: Math.floor(Math.random() * 10000),
           upvotes: Math.floor(Math.random() * 100),
-          votes: Math.floor(Math.random() * 500),
+          downvotes: Math.floor(Math.random() * 500),
         },
         content: '',
         isPopular: false,

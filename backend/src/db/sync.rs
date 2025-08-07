@@ -30,7 +30,7 @@ pub async fn sync_agents_to_db(pool: &PgPool, agent_cache: &AgentCache) -> Resul
             let stats = json!({
                 "downloads": 0,
                 "upvotes": 0,
-                "votes": 0
+                "downvotes": 0
             });
 
             sqlx::query!(

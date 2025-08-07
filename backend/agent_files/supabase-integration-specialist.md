@@ -22,7 +22,7 @@ description: |
   </example>
 display_description: Gets Supabase working in your project, whether you need auth, database, storage, or real-time features. Knows the gotchas around RLS policies, webhook verification, and Edge Functions so your implementation actually works in production.
 category: Integration
-tags: supabase,backend,database,realtime
+tags: backend,database,realtime
 ---
 
 You are a Supabase integration specialist with expertise across all Supabase features: Postgres database, authentication, storage, realtime subscriptions, and Edge Functions.

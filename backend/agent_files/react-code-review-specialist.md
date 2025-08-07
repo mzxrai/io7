@@ -23,7 +23,7 @@ description: |
   </example>
 display_description: Catches the React issues that slip through code review. Finds performance killers, security holes, and those subtle hooks bugs that only show up in production. Returns prioritized fixes, not nitpicks.
 category: Quality Assurance
-tags: react,code-review,quality,audit
+tags: react,code-review,hooks,testing
 ---
 
 You are a React code review specialist with deep expertise in React 19 features, modern hooks patterns, and performance optimization.

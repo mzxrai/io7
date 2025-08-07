@@ -1,5 +1,5 @@
 use axum::{
-    extract::State,
+    extract::{State, Path},
     Json,
     response::IntoResponse,
     http::StatusCode,
@@ -171,4 +171,142 @@ pub async fn agents_cli_handler(
     }
     
     (StatusCode::OK, Json(filtered_agents))
+}
+
+/// Request body for voting endpoint
+#[derive(Deserialize)]
+pub struct VoteRequest {
+    pub vote: u8,  // 0 for downvote, 1 for upvote
+}
+
+/// POST /api/agents/:public_id/vote - Submit a vote for an agent
+pub async fn agent_vote_handler(
+    State(state): State<AppState>,
+    Path(public_id): Path<String>,
+    headers: axum::http::HeaderMap,
+    Json(request): Json<VoteRequest>,
+) -> impl IntoResponse {
+    // Check origin header to ensure request is from our frontend
+    let origin = headers.get("origin")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    
+    let referer = headers.get("referer")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("");
+    
+    // In production, only allow votes from our domain
+    let is_production = std::env::var("ENVIRONMENT").unwrap_or_default() == "production";
+    if is_production {
+        let allowed_origins = ["https://io7.dev", "https://www.io7.dev"];
+        let origin_allowed = allowed_origins.iter().any(|&allowed| origin == allowed);
+        let referer_allowed = allowed_origins.iter().any(|&allowed| referer.starts_with(allowed));
+        
+        if !origin_allowed && !referer_allowed {
+            return (
+                StatusCode::FORBIDDEN,
+                Json(serde_json::json!({
+                    "error": "Votes can only be submitted from io7.dev"
+                }))
+            );
+        }
+    } else {
+        // In development, allow localhost origins
+        let allowed_origins = [
+            "http://localhost:5173",
+            "http://localhost:5174", 
+            "http://localhost:5175",
+            "http://localhost:3000"
+        ];
+        let origin_allowed = allowed_origins.iter().any(|&allowed| origin == allowed);
+        let referer_allowed = allowed_origins.iter().any(|&allowed| referer.starts_with(allowed));
+        
+        // If origin/referer exists but doesn't match allowed origins, reject
+        // (Allow missing origin for testing with curl in dev)
+        if !origin.is_empty() && !referer.is_empty() && !origin_allowed && !referer_allowed {
+            return (
+                StatusCode::FORBIDDEN,
+                Json(serde_json::json!({
+                    "error": "Invalid origin for vote request"
+                }))
+            );
+        }
+    }
+    
+    // Validate vote value
+    if request.vote > 1 {
+        return (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({
+                "error": "Invalid vote value. Must be 0 (downvote) or 1 (upvote)"
+            }))
+        );
+    }
+    
+    // Update the vote count in the database
+    let query = if request.vote == 0 {
+        // Increment downvotes
+        r#"
+        UPDATE agents 
+        SET stats = jsonb_set(
+            stats,
+            '{downvotes}',
+            to_jsonb(COALESCE((stats->>'downvotes')::bigint, 0) + 1)
+        ),
+        updated_at = NOW()
+        WHERE public_id = $1
+        RETURNING public_id
+        "#
+    } else {
+        // Increment upvotes
+        r#"
+        UPDATE agents 
+        SET stats = jsonb_set(
+            stats,
+            '{upvotes}',
+            to_jsonb(COALESCE((stats->>'upvotes')::bigint, 0) + 1)
+        ),
+        updated_at = NOW()
+        WHERE public_id = $1
+        RETURNING public_id
+        "#
+    };
+    
+    let result = sqlx::query(query)
+        .bind(&public_id)
+        .fetch_optional(&state.pool)
+        .await;
+    
+    match result {
+        Ok(Some(_)) => {
+            tracing::debug!("Recorded {} for agent: {}", 
+                if request.vote == 0 { "downvote" } else { "upvote" }, 
+                public_id
+            );
+            (
+                StatusCode::OK,
+                Json(serde_json::json!({
+                    "success": true,
+                    "message": format!("Vote recorded successfully")
+                }))
+            )
+        }
+        Ok(None) => {
+            (
+                StatusCode::NOT_FOUND,
+                Json(serde_json::json!({
+                    "error": "Agent not found"
+                }))
+            )
+        }
+        Err(e) => {
+            tracing::error!("Failed to record vote for agent {}: {}", public_id, e);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(serde_json::json!({
+                    "error": "Failed to record vote"
+                }))
+            )
+        }
+    }
 }

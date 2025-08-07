@@ -82,6 +82,13 @@ export class ApiService {
     return this.enrichAgentWithFrontendData(agent);
   }
 
+  async voteForAgent(agentId: string, vote: 0 | 1): Promise<{ success: boolean; message: string }> {
+    return await this.client.post<{ success: boolean; message: string }>(
+      `/api/agents/${agentId}/vote`,
+      { vote },
+    );
+  }
+
   // Future endpoints could be added here:
   // async fetchStats(): Promise<Stats> { ... }
   // async updateAgent(agent: Agent): Promise<Agent> { ... }

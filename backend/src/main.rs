@@ -2,6 +2,7 @@ mod db;
 mod handlers;
 mod loader;
 mod models;
+mod rate_limit;
 
 use anyhow::Result;
 use axum::{
@@ -9,6 +10,7 @@ use axum::{
     Router,
     http::{header, HeaderValue, Method, StatusCode},
     response::IntoResponse,
+    middleware,
     Json,
 };
 use serde_json::json;
@@ -19,7 +21,8 @@ use tower_http::cors::CorsLayer;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use crate::handlers::{agents_handler, agents_cli_handler, agents::AppState};
+use crate::handlers::{agents_handler, agents_cli_handler, agent_vote_handler, agents::AppState};
+use crate::rate_limit::{RateLimitState, vote_rate_limit_middleware, cleanup_old_limiters};
 
 async fn health_check(
     axum::extract::State(state): axum::extract::State<AppState>,
@@ -92,6 +95,13 @@ async fn main() -> Result<()> {
         last_updated_at: Arc::new(tokio::sync::RwLock::new(None)),
     };
     
+    // Create rate limit state
+    let rate_limit_state = Arc::new(RateLimitState::new());
+    
+    // Start background task to clean up old rate limiters
+    let cleanup_state = Arc::clone(&rate_limit_state);
+    tokio::spawn(cleanup_old_limiters(cleanup_state));
+    
     // Skip initial cache population and background task for Cloud Run
     // The cache will be populated on first request instead
     
@@ -99,6 +109,13 @@ async fn main() -> Result<()> {
     let app = Router::new()
         .route("/api/agents", get(agents_handler))
         .route("/api/agents/cli", post(agents_cli_handler))
+        .route("/api/agents/{public_id}/vote", 
+            post(agent_vote_handler)
+                .layer(middleware::from_fn_with_state(
+                    Arc::clone(&rate_limit_state),
+                    vote_rate_limit_middleware
+                ))
+        )
         .route("/health", get(health_check))
         .layer(
             CorsLayer::new()

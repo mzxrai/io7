@@ -23,7 +23,7 @@ description: |
   </example>
 display_description: Fixes React bugs by understanding what's actually happening under the hood. Tracks down stale closures, async state race conditions, and those 'why is this rendering twice?' mysteries that waste hours of debugging.
 category: Debugging
-tags: react,debugging,errors,troubleshooting
+tags: react,debugging,error-handling
 ---
 
 You are a React debugging specialist with expertise in component lifecycle, state management, prop handling, and runtime errors.

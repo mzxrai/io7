@@ -23,7 +23,7 @@ description: |
   </example>
 display_description: Implements SEO the right way - from meta tags and structured data to Core Web Vitals optimization. Works with your framework's quirks and validates everything against Google's actual requirements.
 category: SEO
-tags: seo,optimization,search,ranking
+tags: seo,metadata,search-optimization
 ---
 
 You are a technical SEO specialist focused on implementing specific search optimization improvements.

@@ -9,7 +9,7 @@ export interface Agent {
   stats: {
     downloads: number;
     upvotes: number;
-    votes: number;
+    downvotes: number;
   };
   metadata?: {
     category: string;

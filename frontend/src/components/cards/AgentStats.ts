@@ -1,9 +1,10 @@
 import { createIcon } from '@utils/icons';
+import './VoteButtons';
 import styles from './AgentStats.module.css';
 
 export class AgentStats extends HTMLElement {
   static get observedAttributes(): string[] {
-    return ['downloads', 'upvotes', 'votes', 'last-updated', 'agent-id'];
+    return ['downloads', 'upvotes', 'downvotes', 'last-updated', 'agent-id', 'agent-name'];
   }
 
   connectedCallback(): void {
@@ -26,9 +27,10 @@ export class AgentStats extends HTMLElement {
   private render(): void {
     const downloads = parseInt(this.getAttribute('downloads') || '0');
     const upvotes = parseInt(this.getAttribute('upvotes') || '0');
-    const votes = parseInt(this.getAttribute('votes') || '0');
+    const downvotes = parseInt(this.getAttribute('downvotes') || '0');
     const lastUpdated = this.getAttribute('last-updated');
     const agentId = this.getAttribute('agent-id');
+    const agentName = this.getAttribute('agent-name') || '';
 
     // Apply host styles
     this.className = styles.host;
@@ -40,6 +42,15 @@ export class AgentStats extends HTMLElement {
     const container = document.createElement('div');
     container.className = styles.stats;
 
+    // Add vote buttons first (left side)
+    if (agentId) {
+      const voteButtons = document.createElement('vote-buttons');
+      voteButtons.setAttribute('agent-id', agentId);
+      voteButtons.setAttribute('upvotes', String(upvotes));
+      voteButtons.setAttribute('downvotes', String(downvotes));
+      container.appendChild(voteButtons);
+    }
+
     // Add download stat if > 25
     if (!isNaN(downloads) && downloads > 25) {
       const stat = document.createElement('div');
@@ -49,21 +60,26 @@ export class AgentStats extends HTMLElement {
       container.appendChild(stat);
     }
 
-    // Add upvote stat if votes > 25
-    if (!isNaN(votes) && !isNaN(upvotes) && votes > 25) {
-      const stat = document.createElement('div');
-      stat.className = styles.stat;
-      stat.appendChild(createIcon('trending-up', 14));
-      stat.appendChild(document.createTextNode(` ${upvotes}% (${votes})`));
-      container.appendChild(stat);
-    }
-
     // Add last updated if provided
     if (lastUpdated) {
       const stat = document.createElement('div');
       stat.className = styles.stat;
       stat.textContent = `Updated ${lastUpdated}`;
       container.appendChild(stat);
+    }
+
+    // Add report issue link
+    if (agentName) {
+      const reportLink = document.createElement('a');
+      reportLink.className = styles.reportIssue;
+      reportLink.href = 'https://github.com/mzxrai/io7/issues/new?template=agent-issue.yml';
+      reportLink.target = '_blank';
+      reportLink.rel = 'noopener noreferrer';
+      reportLink.textContent = 'Report Issue';
+      reportLink.addEventListener('click', e => {
+        e.stopPropagation();
+      });
+      container.appendChild(reportLink);
     }
 
     // Add view source button if agent-id provided

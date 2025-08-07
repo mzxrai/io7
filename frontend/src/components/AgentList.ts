@@ -75,7 +75,7 @@ export class AgentList extends HTMLElement {
             description="${agent.display_description || agent.description}"
             downloads="${agent.stats.downloads || 0}"
             upvotes="${agent.stats.upvotes || 0}"
-            votes="${agent.stats.votes || 0}"
+            downvotes="${agent.stats.downvotes || 0}"
             tags="${agent.metadata?.tags?.join(',') || ''}"
             ${agent.isPopular ? 'is-popular="true"' : ''}
           ></agent-card>

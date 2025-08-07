@@ -14,6 +14,10 @@ import {
   Copy,
   X,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
+  ThumbsUp,
+  ThumbsDown,
   ExternalLink,
 } from 'lucide';
 
@@ -33,6 +37,10 @@ const iconMap = {
   'copy': Copy,
   'x': X,
   'chevron-right': ChevronRight,
+  'chevron-up': ChevronUp,
+  'chevron-down': ChevronDown,
+  'thumbs-up': ThumbsUp,
+  'thumbs-down': ThumbsDown,
   'external-link': ExternalLink,
 } as const;
 

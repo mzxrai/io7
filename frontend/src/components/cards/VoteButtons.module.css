@@ -1,0 +1,59 @@
+/* VoteButtons component styles - Unified button group */
+.host {
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--space-3);
+}
+
+.buttonGroup {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+
+.voteButton {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--font-sans);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.voteButton:first-child {
+  border-right: 1px solid var(--color-border-secondary);
+}
+
+.voteButton:hover:not(:disabled) {
+  background: var(--color-bg-active);
+  color: var(--color-text-subtle);
+}
+
+.voteButton.upvoted {
+  color: var(--color-success);
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.voteButton.downvoted {
+  color: var(--color-error);
+  background: rgba(244, 67, 54, 0.08);
+}
+
+.voteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  display: block;
+}

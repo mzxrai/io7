@@ -24,7 +24,7 @@ pub struct AgentDefinition {
 pub struct AgentStats {
     pub downloads: u64,
     pub upvotes: u64,
-    pub votes: u64,
+    pub downvotes: u64,
 }
 
 /// Agent metadata stored in the database

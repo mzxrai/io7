@@ -82,15 +82,13 @@ describe('AgentCard', () => {
           agent-id="optimize"
           downloads="12400"
           upvotes="92"
-          votes="234"
+          downvotes="142"
           last-updated="2d ago">
         </agent-card>
       `);
 
       // Stats should be visible to the user
       expect(el.textContent).toContain('12.4k'); // formatted downloads
-      expect(el.textContent).toContain('92%'); // upvote percentage
-      expect(el.textContent).toContain('(234)'); // vote count
       expect(el.textContent).toContain('Updated 2d ago');
     });
   });

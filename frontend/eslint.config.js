@@ -28,6 +28,7 @@ export default [
         Event: 'readonly',
         MouseEvent: 'readonly',
         fetch: 'readonly',
+        localStorage: 'readonly',
       },
     },
     plugins: {

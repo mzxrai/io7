@@ -1,6 +1,7 @@
 import { selectionStore } from '../../store/selection';
 import '../shared/Badge';
 import './AgentStats';
+import './VoteButtons';
 import styles from './AgentCard.module.css';
 
 export class AgentCard extends HTMLElement {
@@ -9,7 +10,7 @@ export class AgentCard extends HTMLElement {
   static get observedAttributes(): string[] {
     return [
       'agent-id', 'name', 'category', 'description',
-      'is-popular', 'downloads', 'upvotes', 'votes', 'tags',
+      'is-popular', 'downloads', 'upvotes', 'downvotes', 'tags',
     ];
   }
 
@@ -174,7 +175,7 @@ export class AgentCard extends HTMLElement {
     // Stats attributes
     const downloads = this.getAttribute('downloads') || '';
     const upvotes = this.getAttribute('upvotes') || '';
-    const votes = this.getAttribute('votes') || '';
+    const downvotes = this.getAttribute('downvotes') || '';
     const lastUpdated = this.getAttribute('last-updated') || '';
 
     const popularBadge = isPopular
@@ -209,9 +210,10 @@ export class AgentCard extends HTMLElement {
         <agent-stats
           downloads="${downloads}"
           upvotes="${upvotes}"
-          votes="${votes}"
+          downvotes="${downvotes}"
           last-updated="${lastUpdated}"
-          agent-id="${agentId}">
+          agent-id="${agentId}"
+          agent-name="${name}">
         </agent-stats>
       </div>
     `;

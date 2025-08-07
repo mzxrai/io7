@@ -50,6 +50,10 @@
   --color-border-strong: rgba(255, 255, 255, 0.2);
   --color-border-accent: rgba(255, 255, 255, 0.15);
   
+  /* Semantic Colors */
+  --color-success: #4caf50;
+  --color-error: #f44336;
+  
   /* Background Colors */
   --color-bg-primary: rgba(0, 0, 0, 0.6);
   --color-bg-secondary: rgba(0, 0, 0, 0.2);

@@ -51,7 +51,7 @@ pub async fn init_sample_data(pool: &PgPool) -> Result<()> {
                 json!({
                     "downloads": 12500,
                     "upvotes": 92,
-                    "votes": 234,
+                    "downvotes": 142,
                     "last_updated": "2d ago"
                 })
             ),
@@ -60,7 +60,7 @@ pub async fn init_sample_data(pool: &PgPool) -> Result<()> {
                 json!({
                     "downloads": 8700,
                     "upvotes": 88,
-                    "votes": 189,
+                    "downvotes": 101,
                     "last_updated": "1w ago"
                 })
             ),

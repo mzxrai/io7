@@ -13,7 +13,7 @@ export function createMockAgent(overrides?: Partial<Agent>): Agent {
     stats: {
       downloads: 1000,
       upvotes: 90,
-      votes: 100,
+      downvotes: 10,
     },
     content: '---\nname: test-agent\n---\nAgent content here',
     last_updated: '1d ago',
@@ -34,7 +34,7 @@ export const mockAgents: Agent[] = [
     stats: {
       downloads: 12400,
       upvotes: 92,
-      votes: 234,
+      downvotes: 142,  // Total was 234, so 234 - 92 = 142
     },
     content: '',
     last_updated: '2d ago',
@@ -52,7 +52,7 @@ export const mockAgents: Agent[] = [
     stats: {
       downloads: 8700,
       upvotes: 95,
-      votes: 189,
+      downvotes: 94,  // Total was 189, so 189 - 95 = 94
     },
     content: '',
     last_updated: '5d ago',
@@ -70,7 +70,7 @@ export const mockAgents: Agent[] = [
     stats: {
       downloads: 15200,
       upvotes: 88,
-      votes: 412,
+      downvotes: 324,  // Total was 412, so 412 - 88 = 324
     },
     content: '',
     last_updated: '1w ago',
@@ -87,8 +87,8 @@ export const mockAgents: Agent[] = [
     },
     stats: {
       downloads: 85,
-      upvotes: 78,
-      votes: 23,
+      upvotes: 15,
+      downvotes: 8,  // Total was 23, so using smaller values for test
     },
     content: '',
     last_updated: '2w ago',

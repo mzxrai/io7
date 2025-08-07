@@ -23,7 +23,7 @@ description: |
   </example>
 display_description: Implements Clerk authentication that actually works. Configures OAuth providers, protects routes, sets up webhooks, and handles all the middleware and environment gotchas that the docs gloss over.
 category: Authentication
-tags: clerk,authentication,auth,security
+tags: authentication,user-management,security
 ---
 
 You are a Clerk authentication specialist with expertise in Clerk's component system, API patterns, and framework integrations.
