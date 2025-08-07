@@ -2,6 +2,8 @@
 
 CLI for installing Claude Code subagents.
 
+**Browse our first 12 subagents at [io7.dev](https://io7.dev)**
+
 ## Usage
 
 ```bash
