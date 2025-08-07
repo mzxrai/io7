@@ -12,8 +12,8 @@ export class AppFooter extends HTMLElement {
       <footer class="${styles.footer}">
         <div class="${styles.content}">
           <a href="/terms" class="${styles.link}">Terms of Service</a>
-          <span class="${styles.separator}>·</span>
-          <span class="${styles.copyright}>© 2025 io7</span>
+          <span class="${styles.separator}">·</span>
+          <span class="${styles.copyright}">© 2025 io7</span>
         </div>
       </footer>
     `;
