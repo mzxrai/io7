@@ -1,8 +1,6 @@
 # io7
 
-CLI for installing Claude Code subagents.
-
-**Browse our first 12 subagents at [io7.dev](https://io7.dev)**
+CLI for installing Claude Code subagents. Browse the registry at [io7.dev](https://io7.dev).
 
 ## Usage
 
