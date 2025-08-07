@@ -2,6 +2,8 @@ import './AppHeader';
 import './AgentList';
 import './builder/PackBuilder';
 import './modal/SourceModal';
+import './AppFooter';
+import './TermsOfService';
 import styles from './App.module.css';
 import type { SourceModal } from './modal/SourceModal';
 
@@ -38,21 +40,31 @@ export class App extends HTMLElement {
     // Apply host styles
     this.className = styles.host;
 
-    this.innerHTML = `
-      <app-header></app-header>
-      
-      <div class="${styles.container}">
-        <div class="${styles.leftPanel}">
-          <agent-list></agent-list>
+    // Check if we're on the terms page
+    if (window.location.pathname === '/terms') {
+      this.innerHTML = `
+        <app-header></app-header>
+        <terms-of-service></terms-of-service>
+        <app-footer></app-footer>
+      `;
+    } else {
+      this.innerHTML = `
+        <app-header></app-header>
+        
+        <div class="${styles.container}">
+          <div class="${styles.leftPanel}">
+            <agent-list></agent-list>
+          </div>
+          
+          <div class="${styles.rightPanel}">
+            <pack-builder></pack-builder>
+          </div>
         </div>
         
-        <div class="${styles.rightPanel}">
-          <pack-builder></pack-builder>
-        </div>
-      </div>
-      
-      <source-modal></source-modal>
-    `;
+        <app-footer></app-footer>
+        <source-modal></source-modal>
+      `;
+    }
   }
 }
 
