@@ -36,6 +36,7 @@
   /* Base Colors */
   --color-white: #fff;
   --color-black: #000;
+  --color-background: #0a0a0b;
   
   /* Text Colors */
   --color-text-primary: rgba(255, 255, 255, 0.95);
