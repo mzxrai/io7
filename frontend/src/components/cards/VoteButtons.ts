@@ -10,6 +10,11 @@ export class VoteButtons extends HTMLElement {
   private currentDownvotes = 0;
   private voteState: VoteState = null;
   private isLoading = false;
+  
+  // Cache DOM references
+  private upButton: HTMLButtonElement | null = null;
+  private downButton: HTMLButtonElement | null = null;
+  private isInitialized = false;
 
   static get observedAttributes(): string[] {
     return ['agent-id', 'upvotes', 'downvotes'];
@@ -17,8 +22,12 @@ export class VoteButtons extends HTMLElement {
 
   connectedCallback(): void {
     this.loadVoteState();
-    this.render();
-    this.setupEventListeners();
+    if (!this.isInitialized) {
+      this.initialRender();
+      this.isInitialized = true;
+    } else {
+      this.updateButtonStates();
+    }
   }
 
   disconnectedCallback(): void {
@@ -30,7 +39,9 @@ export class VoteButtons extends HTMLElement {
     this.currentUpvotes = parseInt(this.getAttribute('upvotes') || '0');
     this.currentDownvotes = parseInt(this.getAttribute('downvotes') || '0');
     this.loadVoteState();
-    this.render();
+    if (this.isInitialized) {
+      this.updateButtonStates();
+    }
   }
 
   private loadVoteState(): void {
@@ -57,16 +68,9 @@ export class VoteButtons extends HTMLElement {
     }
   }
 
-  private setupEventListeners(): void {
-    const buttons = this.querySelectorAll('button');
-    if (buttons[0]) buttons[0].addEventListener('click', this.handleUpvote);
-    if (buttons[1]) buttons[1].addEventListener('click', this.handleDownvote);
-  }
-
   private cleanupEventListeners(): void {
-    const buttons = this.querySelectorAll('button');
-    if (buttons[0]) buttons[0].removeEventListener('click', this.handleUpvote);
-    if (buttons[1]) buttons[1].removeEventListener('click', this.handleDownvote);
+    this.upButton?.removeEventListener('click', this.handleUpvote);
+    this.downButton?.removeEventListener('click', this.handleDownvote);
   }
 
   private handleUpvote = async (e: Event): Promise<void> => {
@@ -80,7 +84,7 @@ export class VoteButtons extends HTMLElement {
     // Optimistic update
     this.updateCounts(previousState, newState);
     this.voteState = newState;
-    this.updateUI();
+    this.updateButtonStates();
 
     // Send to API
     await this.sendVote(newState);
@@ -97,23 +101,24 @@ export class VoteButtons extends HTMLElement {
     // Optimistic update
     this.updateCounts(previousState, newState);
     this.voteState = newState;
-    this.updateUI();
+    this.updateButtonStates();
 
     // Send to API
     await this.sendVote(newState);
   };
 
-  private updateUI(): void {
-    // Use requestAnimationFrame for mobile to ensure proper rendering
-    if ('ontouchstart' in window) {
-      requestAnimationFrame(() => {
-        this.render();
-        this.setupEventListeners();
-      });
-    } else {
-      this.render();
-      this.setupEventListeners();
-    }
+  private updateButtonStates(): void {
+    if (!this.upButton || !this.downButton) return;
+    
+    // Update upvote button classes
+    this.upButton.classList.toggle(styles.upvoted, this.voteState === 'upvoted');
+    
+    // Update downvote button classes
+    this.downButton.classList.toggle(styles.downvoted, this.voteState === 'downvoted');
+    
+    // Update disabled state
+    this.upButton.disabled = this.isLoading;
+    this.downButton.disabled = this.isLoading;
   }
 
   private updateCounts(previousState: VoteState, newState: VoteState): void {
@@ -163,37 +168,41 @@ export class VoteButtons extends HTMLElement {
       // Revert optimistic update on error
       this.updateCounts(state, this.voteState);
       this.voteState = this.voteState === state ? null : this.voteState;
-      this.updateUI();
+      this.updateButtonStates();
     } finally {
       this.isLoading = false;
     }
   }
 
-  private render(): void {
+  private initialRender(): void {
     // Apply host styles
     this.className = styles.host;
 
     this.innerHTML = `
       <div class="${styles.buttonGroup}">
         <button 
-          class="${styles.voteButton} ${this.voteState === 'upvoted' ? styles.upvoted : ''}"
+          class="${styles.voteButton}"
           aria-label="Upvote"
           title="Upvote"
-          ${this.isLoading ? 'disabled' : ''}
+          data-vote="up"
         >
           <span class="${styles.icon}" data-icon="thumbs-up"></span>
         </button>
         
         <button 
-          class="${styles.voteButton} ${this.voteState === 'downvoted' ? styles.downvoted : ''}"
+          class="${styles.voteButton}"
           aria-label="Downvote"
           title="Downvote"
-          ${this.isLoading ? 'disabled' : ''}
+          data-vote="down"
         >
           <span class="${styles.icon}" data-icon="thumbs-down"></span>
         </button>
       </div>
     `;
+
+    // Cache button references
+    this.upButton = this.querySelector('[data-vote="up"]');
+    this.downButton = this.querySelector('[data-vote="down"]');
 
     // Replace icon placeholders
     const icons = this.querySelectorAll('[data-icon]');
@@ -205,6 +214,13 @@ export class VoteButtons extends HTMLElement {
         iconEl.replaceWith(svg);
       }
     });
+    
+    // Attach event listeners once
+    this.upButton?.addEventListener('click', this.handleUpvote);
+    this.downButton?.addEventListener('click', this.handleDownvote);
+    
+    // Set initial state
+    this.updateButtonStates();
   }
 }
 
