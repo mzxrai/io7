@@ -7,7 +7,7 @@ export class TermsOfService extends HTMLElement {
 
   private render(): void {
     this.className = styles.host;
-    
+
     this.innerHTML = `
       <div class="${styles.container}">
         <div class="${styles.content}">

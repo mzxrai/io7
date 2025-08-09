@@ -80,8 +80,7 @@ export class VoteButtons extends HTMLElement {
     // Optimistic update
     this.updateCounts(previousState, newState);
     this.voteState = newState;
-    this.render();
-    this.setupEventListeners();
+    this.updateUI();
 
     // Send to API
     await this.sendVote(newState);
@@ -98,12 +97,24 @@ export class VoteButtons extends HTMLElement {
     // Optimistic update
     this.updateCounts(previousState, newState);
     this.voteState = newState;
-    this.render();
-    this.setupEventListeners();
+    this.updateUI();
 
     // Send to API
     await this.sendVote(newState);
   };
+
+  private updateUI(): void {
+    // Use requestAnimationFrame for mobile to ensure proper rendering
+    if ('ontouchstart' in window) {
+      requestAnimationFrame(() => {
+        this.render();
+        this.setupEventListeners();
+      });
+    } else {
+      this.render();
+      this.setupEventListeners();
+    }
+  }
 
   private updateCounts(previousState: VoteState, newState: VoteState): void {
     // Remove previous vote
@@ -152,8 +163,7 @@ export class VoteButtons extends HTMLElement {
       // Revert optimistic update on error
       this.updateCounts(state, this.voteState);
       this.voteState = this.voteState === state ? null : this.voteState;
-      this.render();
-      this.setupEventListeners();
+      this.updateUI();
     } finally {
       this.isLoading = false;
     }

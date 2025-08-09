@@ -7,7 +7,7 @@ export class AppFooter extends HTMLElement {
 
   private render(): void {
     this.className = styles.host;
-    
+
     this.innerHTML = `
       <footer class="${styles.footer}">
         <div class="${styles.content}">
