@@ -65,8 +65,8 @@
   /* Gradient Overlays */
   --gradient-glass: linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.02)
+    rgba(255, 255, 255, 0.015),
+    rgba(255, 255, 255, 0.005)
   );
   
   /* ============================================

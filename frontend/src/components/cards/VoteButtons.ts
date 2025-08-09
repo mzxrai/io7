@@ -70,6 +70,7 @@ export class VoteButtons extends HTMLElement {
   }
 
   private handleUpvote = async (e: Event): Promise<void> => {
+    e.preventDefault();
     e.stopPropagation();
     if (this.isLoading || !this.agentId) return;
 
@@ -87,6 +88,7 @@ export class VoteButtons extends HTMLElement {
   };
 
   private handleDownvote = async (e: Event): Promise<void> => {
+    e.preventDefault();
     e.stopPropagation();
     if (this.isLoading || !this.agentId) return;
 
