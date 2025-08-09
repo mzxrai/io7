@@ -32,7 +32,7 @@
   border-right: 1px solid var(--color-border-secondary);
 }
 
-.voteButton:hover:not(:disabled) {
+.voteButton:hover:not(:disabled):not(.upvoted):not(.downvoted) {
   background: var(--color-bg-active);
   color: var(--color-text-subtle);
 }

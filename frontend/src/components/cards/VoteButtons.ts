@@ -10,7 +10,7 @@ export class VoteButtons extends HTMLElement {
   private currentDownvotes = 0;
   private voteState: VoteState = null;
   private isLoading = false;
-  
+
   // Cache DOM references
   private upButton: HTMLButtonElement | null = null;
   private downButton: HTMLButtonElement | null = null;
@@ -109,13 +109,13 @@ export class VoteButtons extends HTMLElement {
 
   private updateButtonStates(): void {
     if (!this.upButton || !this.downButton) return;
-    
+
     // Update upvote button classes
     this.upButton.classList.toggle(styles.upvoted, this.voteState === 'upvoted');
-    
+
     // Update downvote button classes
     this.downButton.classList.toggle(styles.downvoted, this.voteState === 'downvoted');
-    
+
     // Update disabled state
     this.upButton.disabled = this.isLoading;
     this.downButton.disabled = this.isLoading;
@@ -214,11 +214,11 @@ export class VoteButtons extends HTMLElement {
         iconEl.replaceWith(svg);
       }
     });
-    
+
     // Attach event listeners once
     this.upButton?.addEventListener('click', this.handleUpvote);
     this.downButton?.addEventListener('click', this.handleDownvote);
-    
+
     // Set initial state
     this.updateButtonStates();
   }
