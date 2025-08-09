@@ -54,7 +54,6 @@
   width: var(--size-checkbox);
   height: var(--size-checkbox);
   cursor: pointer;
-  accent-color: var(--color-white);
 }
 
 .header {

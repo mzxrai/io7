@@ -41,9 +41,6 @@ export class AgentCard extends HTMLElement {
     // Card click handler - attach to host element for full coverage
     this.addEventListener('click', this.handleCardClick);
 
-    // Add touch support for iOS devices
-    this.addEventListener('touchend', this.handleTouchEnd, { passive: false });
-
     // Listen to store changes
     this.storeListener = () => this.syncWithStore();
     selectionStore.addEventListener('change', this.storeListener);
@@ -55,9 +52,6 @@ export class AgentCard extends HTMLElement {
 
     // Remove click handler from host element
     this.removeEventListener('click', this.handleCardClick);
-
-    // Remove touch handler
-    this.removeEventListener('touchend', this.handleTouchEnd);
 
     if (this.storeListener) {
       selectionStore.removeEventListener('change', this.storeListener);
@@ -86,30 +80,6 @@ export class AgentCard extends HTMLElement {
     const target = event.target as HTMLElement;
 
     // Don't toggle if clicking on checkbox or view source button
-    if (
-      target.closest(`.${styles.checkbox}`) ||
-      target.closest(`.${styles.checkboxWrapper}`) ||
-      target.closest('button') ||
-      target.tagName === 'BUTTON'
-    ) {
-      return;
-    }
-
-    const agentId = this.getAttribute('agent-id');
-    if (!agentId) return;
-
-    selectionStore.toggle(agentId);
-    this.syncWithStore();
-    this.emitSelectionEvent(selectionStore.isSelected(agentId));
-  };
-
-  private handleTouchEnd = (event: TouchEvent): void => {
-    // Prevent the click event from firing after touch
-    event.preventDefault();
-
-    const target = event.target as HTMLElement;
-
-    // Don't toggle if touching checkbox or view source button
     if (
       target.closest(`.${styles.checkbox}`) ||
       target.closest(`.${styles.checkboxWrapper}`) ||
