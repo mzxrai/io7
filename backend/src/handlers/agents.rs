@@ -43,10 +43,10 @@ pub async fn refresh_agents_cache(state: &AppState) -> Result<(), anyhow::Error>
     
     // Define priority agents that should appear first
     let priority_agents = vec![
+        "react-code-reviewer",
+        "email-pipeline-builder",
         "code-architect",
-        "react-code-reviewer",  // closest to "code reviewer" in the database
-        "email-pipeline-builder",  // actual name for "email builder"
-        "conversion-rate-optimizer",
+        "conversion-rate-optimizer"
     ];
     
     // Sort agents: priority agents first (in defined order), then others alphabetically
