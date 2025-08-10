@@ -21,10 +21,10 @@ pub struct AppState {
 
 /// Refresh the combined agents cache
 pub async fn refresh_agents_cache(state: &AppState) -> Result<(), anyhow::Error> {
-    // Query all agents from database
+    // Query all agents from database (no ORDER BY needed, we sort in Rust)
     let agent_dbs = sqlx::query_as!(
         AgentDb,
-        "SELECT id, public_id, name, stats, created_at, updated_at FROM agents ORDER BY name"
+        "SELECT id, public_id, name, stats, created_at, updated_at FROM agents"
     )
     .fetch_all(&state.pool)
     .await?;
@@ -40,6 +40,27 @@ pub async fn refresh_agents_cache(state: &AppState) -> Result<(), anyhow::Error>
             tracing::warn!("Agent {} in database but not in agent_files", agent_db.name);
         }
     }
+    
+    // Define priority agents that should appear first
+    let priority_agents = vec![
+        "code-architect",
+        "react-code-reviewer",  // closest to "code reviewer" in the database
+        "email-pipeline-builder",  // actual name for "email builder"
+        "conversion-rate-optimizer",
+    ];
+    
+    // Sort agents: priority agents first (in defined order), then others alphabetically
+    agents.sort_by(|a, b| {
+        let a_priority = priority_agents.iter().position(|&name| name == a.name);
+        let b_priority = priority_agents.iter().position(|&name| name == b.name);
+        
+        match (a_priority, b_priority) {
+            (Some(a_pos), Some(b_pos)) => a_pos.cmp(&b_pos), // Both priority: use defined order
+            (Some(_), None) => std::cmp::Ordering::Less,      // a is priority, b is not
+            (None, Some(_)) => std::cmp::Ordering::Greater,   // b is priority, a is not
+            (None, None) => a.name.cmp(&b.name),              // Neither priority: alphabetical
+        }
+    });
     
     // Update the cache
     *state.agents_combined.write().await = agents;
