@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT id, public_id, name, stats, created_at, updated_at FROM agents ORDER BY name",
+  "query": "SELECT id, public_id, name, stats, created_at, updated_at FROM agents",
   "describe": {
     "columns": [
       {
@@ -46,5 +46,5 @@
       false
     ]
   },
-  "hash": "1b6f644dea324039004434334415255a85a32d05a5b2af5412c118d286c647e5"
+  "hash": "d36eaf90531b32109cc032f20e6e90b06a68d9fd497dbd13f5ab6f1447746b8b"
 }
