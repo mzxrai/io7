@@ -1,5 +1,26 @@
 steps:
-  # Build the container image with caching
+  # Download cargo registry cache from GCS
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Downloading cargo cache..."
+        gsutil -m cp gs://${PROJECT_ID}_cloudbuild_cache/cargo-cache.tar.gz cargo-cache.tar.gz 2>/dev/null || echo "No cache found"
+        if [ -f cargo-cache.tar.gz ]; then
+          tar -xzf cargo-cache.tar.gz
+          echo "Cache restored"
+        fi
+    volumes:
+      - name: 'cargo-cache'
+        path: '/workspace/.cargo'
+
+  # Pull previous image for Docker layer caching
+  - name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: ['-c', 'docker pull gcr.io/$PROJECT_ID/io7-backend:latest || exit 0']
+
+  # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
@@ -10,18 +31,30 @@ steps:
       - '--cache-from'
       - 'gcr.io/$PROJECT_ID/io7-backend:latest'
       - '--build-arg'
-      - 'BUILDKIT_INLINE_CACHE=1'
-      - '-f'
-      - 'Dockerfile.optimized'
+      - 'CARGO_HOME=/workspace/.cargo'
       - '.'
-    env:
-      - 'DOCKER_BUILDKIT=1'
+    volumes:
+      - name: 'cargo-cache'
+        path: '/workspace/.cargo'
 
-  # Push the container image to Container Registry
+  # Save cargo cache back to GCS
+  - name: 'gcr.io/cloud-builders/gsutil'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Saving cargo cache..."
+        tar -czf cargo-cache.tar.gz .cargo/registry .cargo/git 2>/dev/null || true
+        gsutil -m cp cargo-cache.tar.gz gs://${PROJECT_ID}_cloudbuild_cache/cargo-cache.tar.gz || true
+    volumes:
+      - name: 'cargo-cache'
+        path: '/workspace/.cargo'
+
+  # Push the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/io7-backend']
 
-  # Deploy container image to Cloud Run
+  # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -37,12 +70,9 @@ steps:
       - '--allow-unauthenticated'
 
 options:
-  # Use a high-CPU machine for faster Rust compilation
   machineType: 'E2_HIGHCPU_8'
-  # Enable docker build logs
   logging: CLOUD_LOGGING_ONLY
-  # Increase timeout for Rust builds
   timeout: '1200s'
 
 substitutions:
-  _DEPLOY_REGION: us-central1  # Change to your preferred region
+  _DEPLOY_REGION: us-central1
