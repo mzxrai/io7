@@ -72,6 +72,7 @@ steps:
 options:
   machineType: 'E2_HIGHCPU_8'
   logging: CLOUD_LOGGING_ONLY
-  timeout: '1200s'
+
+timeout: '1200s'
 
 # No need to define substitutions here - they come from the trigger
