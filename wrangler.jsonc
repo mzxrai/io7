@@ -1,9 +1,7 @@
 {
   "name": "io7",
   "compatibility_date": "2025-01-29",
-  "build": {
-    "command": "cd frontend && npm ci && npm run build"
-  },
+  "pages_build_output_dir": "dist",
   "routes": [
     {
       "pattern": "io7.dev",
@@ -13,10 +11,5 @@
       "pattern": "www.io7.dev",
       "custom_domain": true
     }
-  ],
-  "assets": {
-    "directory": "./frontend/dist",
-    "html_handling": "auto-trailing-slash",
-    "not_found_handling": "single-page-application"
-  }
+  ]
 }

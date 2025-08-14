@@ -1,0 +1,11 @@
+# Cache versioned assets for 1 year
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache HTML for 5 minutes
+/*.html
+  Cache-Control: public, max-age=300
+
+# Cache root index for 5 minutes  
+/
+  Cache-Control: public, max-age=300
