@@ -123,6 +123,7 @@ async fn main() -> Result<()> {
                     "http://localhost:5174".parse::<HeaderValue>().unwrap(),
                     "http://localhost:5175".parse::<HeaderValue>().unwrap(),
                     "https://io7.dev".parse::<HeaderValue>().unwrap(),
+                    "https://io7.sh".parse::<HeaderValue>().unwrap(),
                 ])
                 .allow_methods([Method::GET, Method::POST, Method::OPTIONS])
                 .allow_headers([header::CONTENT_TYPE])
