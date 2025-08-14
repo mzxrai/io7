@@ -2,10 +2,10 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Cache HTML for 5 minutes
+# Cache HTML for 5 minutes, serve stale for 1 hour while revalidating
 /*.html
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=300, stale-while-revalidate=3600
 
-# Cache root index for 5 minutes  
+# Cache root index for 5 minutes, serve stale for 1 hour while revalidating
 /
-  Cache-Control: public, max-age=300
+  Cache-Control: public, max-age=300, stale-while-revalidate=3600
