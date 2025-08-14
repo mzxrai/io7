@@ -18,18 +18,18 @@ steps:
   # Pull previous image for Docker layer caching
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
-    args: ['-c', 'docker pull gcr.io/$PROJECT_ID/io7-backend:latest || exit 0']
+    args: ['-c', 'docker pull $_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:latest || exit 0']
 
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/io7-backend:$COMMIT_SHA'
+      - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
       - '-t'
-      - 'gcr.io/$PROJECT_ID/io7-backend:latest'
+      - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:latest'
       - '--cache-from'
-      - 'gcr.io/$PROJECT_ID/io7-backend:latest'
+      - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:latest'
       - '--build-arg'
       - 'CARGO_HOME=/workspace/.cargo'
       - '.'
@@ -52,7 +52,7 @@ steps:
 
   # Push the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/io7-backend']
+    args: ['push', '--all-tags', '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME']
 
   # Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -60,13 +60,13 @@ steps:
     args:
       - 'run'
       - 'deploy'
-      - 'io7-backend'
+      - '$_SERVICE_NAME'  # Use the service name from trigger
       - '--image'
-      - 'gcr.io/$PROJECT_ID/io7-backend:$COMMIT_SHA'
+      - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:$COMMIT_SHA'
       - '--region'
       - '$_DEPLOY_REGION'
       - '--platform'
-      - 'managed'
+      - '$_PLATFORM'
       - '--allow-unauthenticated'
 
 options:
@@ -74,5 +74,4 @@ options:
   logging: CLOUD_LOGGING_ONLY
   timeout: '1200s'
 
-substitutions:
-  _DEPLOY_REGION: us-central1
+# No need to define substitutions here - they come from the trigger
