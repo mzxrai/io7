@@ -1,0 +1,48 @@
+steps:
+  # Build the container image with caching
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/io7-backend:$COMMIT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/io7-backend:latest'
+      - '--cache-from'
+      - 'gcr.io/$PROJECT_ID/io7-backend:latest'
+      - '--build-arg'
+      - 'BUILDKIT_INLINE_CACHE=1'
+      - '-f'
+      - 'Dockerfile.optimized'
+      - '.'
+    env:
+      - 'DOCKER_BUILDKIT=1'
+
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', '--all-tags', 'gcr.io/$PROJECT_ID/io7-backend']
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'io7-backend'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/io7-backend:$COMMIT_SHA'
+      - '--region'
+      - '$_DEPLOY_REGION'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+
+options:
+  # Use a high-CPU machine for faster Rust compilation
+  machineType: 'E2_HIGHCPU_8'
+  # Enable docker build logs
+  logging: CLOUD_LOGGING_ONLY
+  # Increase timeout for Rust builds
+  timeout: '1200s'
+
+substitutions:
+  _DEPLOY_REGION: us-central1  # Change to your preferred region

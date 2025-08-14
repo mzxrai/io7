@@ -1,11 +1,15 @@
 target/
-Dockerfile
+Dockerfile*
 .dockerignore
 .git/
 .gitignore
 *.md
 .env
 .env.*
+!.env.example
 *.log
 dev.db
 .DS_Store
+cloudbuild.yaml
+spec.md
+.gcloudignore
