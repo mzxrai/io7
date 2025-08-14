@@ -1,20 +1,4 @@
 steps:
-  # Download cargo registry cache from GCS
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Downloading cargo cache..."
-        gsutil -m cp gs://${PROJECT_ID}_cloudbuild_cache/cargo-cache.tar.gz cargo-cache.tar.gz 2>/dev/null || echo "No cache found"
-        if [ -f cargo-cache.tar.gz ]; then
-          tar -xzf cargo-cache.tar.gz
-          echo "Cache restored"
-        fi
-    volumes:
-      - name: 'cargo-cache'
-        path: '/workspace/.cargo'
-
   # Pull previous image for Docker layer caching
   - name: 'gcr.io/cloud-builders/docker'
     entrypoint: 'bash'
@@ -30,25 +14,9 @@ steps:
       - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:latest'
       - '--cache-from'
       - '$_AR_HOSTNAME/$PROJECT_ID/$_AR_REPOSITORY/$_SERVICE_NAME:latest'
-      - '--build-arg'
-      - 'CARGO_HOME=/workspace/.cargo'
-      - '.'
-    volumes:
-      - name: 'cargo-cache'
-        path: '/workspace/.cargo'
-
-  # Save cargo cache back to GCS
-  - name: 'gcr.io/cloud-builders/gsutil'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Saving cargo cache..."
-        tar -czf cargo-cache.tar.gz .cargo/registry .cargo/git 2>/dev/null || true
-        gsutil -m cp cargo-cache.tar.gz gs://${PROJECT_ID}_cloudbuild_cache/cargo-cache.tar.gz || true
-    volumes:
-      - name: 'cargo-cache'
-        path: '/workspace/.cargo'
+      - '-f'
+      - 'backend/Dockerfile'
+      - 'backend'
 
   # Push the container image
   - name: 'gcr.io/cloud-builders/docker'
