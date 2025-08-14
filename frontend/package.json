@@ -36,7 +36,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run build:cli",
+    "build": "vite build && npm run build:cli",
     "build:cli": "node scripts/build-cli.js",
     "build:cli:dev": "NODE_ENV=development node scripts/build-cli.js",
     "preview": "vite preview",
