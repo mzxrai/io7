@@ -98,6 +98,35 @@ impl AgentDb {
             last_updated,
         }
     }
+    
+    /// Convert database model to API response model without file definition
+    pub fn to_api_model_from_db(self) -> Agent {
+        let stats: AgentStats = serde_json::from_value(self.stats.clone())
+            .unwrap_or_default();
+        
+        // Create default metadata
+        let metadata = AgentMetadata {
+            category: "general".to_string(),
+            tags: vec![],
+        };
+
+        // Format updated_at as ISO 8601 string
+        let last_updated = Some(self.updated_at.to_string());
+
+        Agent {
+            id: self.public_id,
+            name: self.name.clone(),
+            display_name: self.name.clone(), // Use name as display name
+            description: "Agent loaded from database".to_string(),
+            display_description: None,
+            model: None,
+            tools: None,
+            stats,
+            metadata,
+            content: "".to_string(), // Empty content
+            last_updated,
+        }
+    }
 }
 
 /// In-memory cache for agent definitions

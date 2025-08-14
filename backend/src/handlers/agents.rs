@@ -32,13 +32,9 @@ pub async fn refresh_agents_cache(state: &AppState) -> Result<(), anyhow::Error>
     let mut agents = Vec::new();
     
     for agent_db in agent_dbs {
-        // Get the definition from cache
-        if let Some(definition) = state.agent_cache.get(&agent_db.name) {
-            agents.push(agent_db.to_api_model(definition));
-        } else {
-            // Log warning but continue - agent in DB but not in files
-            tracing::warn!("Agent {} in database but not in agent_files", agent_db.name);
-        }
+        // Convert database agent to API model
+        // Since we no longer have file-based definitions, use the database data directly
+        agents.push(agent_db.to_api_model_from_db());
     }
     
     // Define priority agents that should appear first

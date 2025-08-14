@@ -14,8 +14,8 @@ use axum::{
     Json,
 };
 use serde_json::json;
+use std::collections::HashMap;
 use std::net::SocketAddr;
-use std::path::Path;
 use std::sync::Arc;
 use tower_http::cors::CorsLayer;
 use tracing::info;
@@ -56,9 +56,8 @@ async fn main() -> Result<()> {
     
     info!("Starting io7 backend");
     
-    // Load agent definitions from markdown files
-    let agent_files_dir = Path::new("agent_files");
-    let agent_cache = Arc::new(loader::load_agent_definitions(agent_files_dir)?);
+    // Create empty agent cache (no longer loading from files)
+    let agent_cache = Arc::new(std::collections::HashMap::new());
     
     // Connect to database
     let database_url = std::env::var("DATABASE_URL")
